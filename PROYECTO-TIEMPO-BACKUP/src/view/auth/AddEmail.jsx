@@ -1,0 +1,135 @@
+import React, { useState } from "react";
+import {
+  View,
+  StyleSheet,
+  ImageBackground,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StatusBar
+} from "react-native";
+
+import { SafeAreaView } from "react-native-safe-area-context";
+import AuthTitleComponent from "../../component/AuthTitleComponent";
+import AuthButtonComponent from "../../component/AuthButtonComponent";
+import AuthInputComponent from "../../component/AuthInputComponent";
+import { mailValidator} from "../../helper/credentialValidator";
+import HeaderComponent from "../../component/HeaderComponent";
+
+export default function AddEmail({navigation}){
+
+    const [mail,setMail] = useState("");
+    const [error, setError] = useState({});
+
+    const credentialsValidator = () => {
+    let errors = {};
+
+    const mailError = mailValidator(mail);
+
+    if (mailError) errors.mail = mailError;
+
+    setError(errors);
+    return Object.keys(errors).length === 0;
+};
+
+
+    const handleNext = () =>{
+    if(credentialsValidator())
+       console.log("valido")
+    };
+
+
+    return(
+          <>
+           <StatusBar
+            backgroundColor="#689AE5"   
+            barStyle="light-content"    
+          />
+            <SafeAreaView style={styles.safeArea}>
+                  
+                  <KeyboardAvoidingView
+              behavior={Platform.OS === "ios" ? "padding" : "height"}
+              style={styles.flex}
+            >
+               <ScrollView
+                contentContainerStyle={styles.scrollContainer}
+              
+               
+              >
+               
+                <ImageBackground
+                    source={require("../../assets/Timer/recordBackground.png")}
+                    style={styles.background}
+                    resizeMode="cover"
+                >
+                    <View style={{ width: "100%" }}>
+                        <HeaderComponent navigation={navigation} change={true} show={false} />
+                    </View>
+                    <View style={styles.titleContent}><AuthTitleComponent/></View>
+                    <View style={styles.inputContent}>
+                      <AuthInputComponent
+                        placeholder={"Ingresá tu mail"}
+                        value={mail}
+                        onChange={setMail}
+                        error={error.mail || ""}
+                      />
+                    </View>
+                    <View style={styles.buttonContent}><AuthButtonComponent value={"Enviar mail recuperación"} onPress={handleNext} backgroundColor={Object.keys(error).length === 0 && mail ? "#6881E5" : "#979797"}/></View>
+                
+                </ImageBackground>
+                </ScrollView>
+                </KeyboardAvoidingView>
+            </SafeAreaView>
+            </>
+        );
+};
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor:"#fff"
+  },
+   flex: { flex: 1,
+    width:"100%",
+    },
+  scrollContainer: {
+    flexGrow: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingBottom: 20,
+    paddingHorizontal: 0,
+  },
+  background: {
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "center",
+    width: "100%",
+    height:"45%"
+  },
+  titleContent:{
+    width:"90%",
+    alignItems:"center",
+    marginTop:"100%"
+  },
+  inputContent:{
+    marginTop:40,
+    width:"85%",
+    gap:20
+  },
+  recoverContent:{
+    width:"85%",
+    justifyContent:"flex-start"
+  },
+  recoverText:{
+    fontSize:14,
+    fontWeight:500,
+    textDecorationLine: 'underline',
+    color:"#333333",
+    paddingTop:7,
+  },
+  buttonContent:{
+    width:"85%",
+    alignItems:"center",
+    marginTop:35
+  }
+});
