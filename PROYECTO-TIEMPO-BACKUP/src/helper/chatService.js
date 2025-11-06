@@ -2,8 +2,7 @@
 // o si estás en un entorno RN puro, puedes cargarla desde un archivo .env.
 // Dejamos la variable de entorno vacía ya que este entorno la proporciona.
 const API_KEY = ""; 
-const API_URL = '';
-
+const API_URL = ""
 // Instrucción del Sistema para Blu (mantenemos la definición de la personalidad y formato de respuesta)
 const SYSTEM_INSTRUCTION = `You are Blu, a friendly and empathetic companion. Your personality is caring, and a bit playful. You are speaking with a user in Spanish. Keep your responses concise and natural.
     

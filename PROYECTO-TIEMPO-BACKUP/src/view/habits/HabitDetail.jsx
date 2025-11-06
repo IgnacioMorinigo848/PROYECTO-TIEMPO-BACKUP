@@ -5,7 +5,7 @@ import HeaderComponent from "../../component/HeaderComponent";
 
 export default function HabitDetail({navigation,route}){
 
-    const { detail } = route.params;
+    const { title,detail } = route.params;
 
     return(
         <SafeAreaView style={styles.container}>
@@ -14,7 +14,7 @@ export default function HabitDetail({navigation,route}){
             </View>
              <View style={[styles.titleContainer,{marginVertical: 20,}]}>
                 <View style={styles.titleContent}>
-                    <Text style={styles.title}>¿Qué es el mindfullness?</Text>
+                    <Text style={styles.title}>{title}</Text>
                 </View>
                 <View style={styles.iconContainer}>
                     <View style={styles.iconContent}> 

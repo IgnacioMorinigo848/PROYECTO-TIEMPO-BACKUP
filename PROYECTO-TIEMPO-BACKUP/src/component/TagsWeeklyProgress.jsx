@@ -4,17 +4,27 @@ import { MaterialIcons } from "@expo/vector-icons";
 
 const { height } = Dimensions.get("window");
 
-const TagsWeeklyProgress = ({ navigation, tag, detail="" }) => {
+const TagsWeeklyProgress = ({ onPress, tag,active=false}) => {
   return (
-    <TouchableOpacity style={styles.container} onPress={ ()=> detail ? navigation.navigate(tag.route,{detail}) : navigation.navigate(tag.route)}>
+    <TouchableOpacity style={styles.container} onPress={onPress }>
       <View style={styles.iconContent}>
         <Image style={styles.icon} source={tag.icon} resizeMode="contain" />
       </View>
       <View style={styles.infoContent}>
+        {active && 
+          <View>
+            <Text>{`${tag.phase}/${tag.phase + 1}`} completados</Text>
+          </View>
+        }
         <Text style={styles.title}>{tag.title}</Text>
-        <Text style={styles.subtitle}>{tag.subtitle}</Text>
+        { !active && <Text style={styles.subtitle}>{tag.subtitle}</Text>}
+        { active && <View style={styles.progressBarContent}>
+            <View style={[styles.progressBar,{width:tag.progress + "%"}]}/>
+        </View>
+        }
       </View>
       <MaterialIcons name="chevron-right" size={30} color="#3E73C3"/>
+
     </TouchableOpacity>
   );
 };
@@ -59,6 +69,18 @@ const styles = StyleSheet.create({
     color: "#000",
     marginTop: 2,
   },
+   progressBarContent:{
+        width:"80%",
+        justifyContent:"flex-start",
+        backgroundColor:"#BABABA",
+        marginVertical:6,
+        borderRadius:15,
+    },
+    progressBar:{
+        borderRadius:15,
+        paddingTop:8,
+        backgroundColor:"#CC68E5"
+    },
 });
 
 export default TagsWeeklyProgress;

@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { categories } from "../../helper/data";
 
 import HeaderComponent from "../../component/HeaderComponent";
-import TagsComponent from "../../component/TagsComponent";
+import TagsWeeklyProgress from "../../component/TagsWeeklyProgress";
 
 const MyCategories = ({ navigation }) => {
   return (
@@ -26,7 +26,7 @@ const MyCategories = ({ navigation }) => {
 
         <View style={styles.tagsContainer}>
           {categories.map((tag,index) => (
-            <TagsComponent key={index} change={true} tag={tag} navigation={navigation} selected={tag.name} index={index}/>
+            <TagsWeeklyProgress onPress={()=>navigation.navigate("TimerStack",{screen:"Timer",params:{tag:tag}})} tag={tag} active={true} key={index}/>
           ))}
         </View>
 
@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingBottom: 40,
+    alignItems:"center"
   },
   titleContainer: {
     width: "100%",
@@ -53,7 +54,7 @@ const styles = StyleSheet.create({
   },
   tagsContainer: {
     alignItems: "center",
-    width: "100%",
+    width: "90%",
     marginVertical: 15,
   },
 });

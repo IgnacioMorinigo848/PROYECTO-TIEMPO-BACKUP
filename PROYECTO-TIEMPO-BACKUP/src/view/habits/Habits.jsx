@@ -19,7 +19,7 @@ export default function Habits({navigation}){
                 style={{ width: "90%", alignSelf: "center" }}
             >
                 {habits.map((tag,index) => (
-                <TagsWeeklyProgress navigation={navigation} tag={tag} key={index} detail={tag.detail}/>
+                <TagsWeeklyProgress onPress={()=> navigation.navigate("HabitDetail",{title:tag.title,detail:tag.detail})} tag={tag} key={index} />
                 ))}
 
             </ScrollView>

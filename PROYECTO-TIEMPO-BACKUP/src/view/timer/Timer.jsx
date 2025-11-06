@@ -1,29 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import DropDownPicker from "react-native-dropdown-picker";
-import { Ionicons } from "@expo/vector-icons";
-import { categories } from "../../helper/data";
 import HeaderComponent from "../../component/HeaderComponent";
+import TagsWeeklyProgress from "../../component/TagsWeeklyProgress";
 
 const Timer = ({ navigation, route }) => {
-  const { selected,index } = route.params;
-
-  console.log(index)
-
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(selected);
-  const [items, setItems] = useState(
-    categories.map((cat) => ({
-      label: cat.name,
-      value: cat.name,
-    }))
-  );
-
+  const { tag } = route.params;
+ 
   // Estados del temporizador
   const [isRunning, setIsRunning] = useState(false);
   const [time, setTime] = useState(0);
-  const [isMuted, setIsMuted] = useState(false);
   const intervalRef = useRef(null);
 
   // Manejar el temporizador
@@ -56,69 +42,23 @@ const Timer = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* Header */}
+     
       <View style={{ width: "100%" }}>
         <HeaderComponent navigation={navigation} change={true} />
       </View>
 
-      {/* Título */}
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>Timer</Text>
+      <View style={{ width: "90%", alignSelf: "center" }}>
+        <TagsWeeklyProgress tag={tag} active={true} key={tag} />
       </View>
 
-      {/* Selector de categoría */}
-      <View style={styles.container}>
-        <DropDownPicker
-          open={open}
-          value={value}
-          items={items}
-          setOpen={setOpen}
-          setValue={setValue}
-          setItems={setItems}
-          placeholder="Seleccionar categoría"
-          style={styles.dropdown}
-          dropDownContainerStyle={styles.dropdownContainer}
-          listItemLabelStyle={styles.listItemLabel}
-          arrowIconStyle={{ tintColor: "#7A42F4" }}
-        />
-      </View>
-
-      {/* Reloj */}
       <View style={styles.timerContainer}>
-        <View style={styles.circle}>
+        <View style={styles.content}>
           <Text style={styles.timeText}>{formatTime(time)}</Text>
         </View>
 
-        {/* Controles */}
-        <View style={styles.controls}>
-          {/* Mute */}
-          <TouchableOpacity onPress={() => setIsMuted(!isMuted)}>
-            <Ionicons
-              name={isMuted ? "volume-mute-outline" : "volume-high-outline"}
-              size={30}
-              color="#fff"
-            />
-          </TouchableOpacity>
-
-          {/* Play / Pause */}
-          <TouchableOpacity
-            style={styles.playButton}
-            onPress={() => setIsRunning(!isRunning)}
-          >
-            <Ionicons
-              name={isRunning ? "pause" : "play"}
-              size={28}
-              color="#fff"
-            />
-          </TouchableOpacity>
-
-          {/* Stop */}
-          <TouchableOpacity onPress={handleStop}>
-            <View style={styles.stopButton}>
-              <Ionicons name="stop" size={22} color="#6868E5" />
-            </View>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity style={styles.btnContent} onPress={()=> {!isRunning ? setIsRunning(!isRunning) : handleStop()}}>
+          <Text style={styles.btn}>{ isRunning ? "Finalizar" : "Comerzar"}</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -127,7 +67,7 @@ const Timer = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#6868E5",
+    backgroundColor: "#909fddff",
   },
   titleContainer: {
     width: "100%",
@@ -143,65 +83,41 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 20,
   },
-  dropdown: {
-    backgroundColor: "#fff",
-    borderColor: "#ddd",
-    borderWidth: 1,
-    borderRadius: 8,
-    elevation: 2,
-  },
-  dropdownContainer: {
-    borderColor: "#ddd",
-    borderWidth: 1,
-    borderRadius: 8,
-  },
-  listItemLabel: {
-    fontSize: 16,
-    color: "#000",
-  },
   timerContainer: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
   },
-  circle: {
-    width: 300,
-    height: 300,
-    borderRadius: 200,
-    borderWidth: 5,
-    borderColor: "#fff",
-    borderStyle: "dotted",
+  content:{
+    width:"60%",
     alignItems: "center",
-    justifyContent: "center",
+    borderRadius:15,
+    paddingVertical:10,
+    backgroundColor:"#fff",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
+    elevation: 10,
   },
   timeText: {
-    color: "#fff",
-    fontSize: 32,
+    color: "#333333",
+    fontSize: 52,
     fontWeight: "bold",
   },
-  controls: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: "60%",
-    marginTop: 60,
+ btnContent:{
+    width:"90%",
+    alignItems:"center",
+    backgroundColor:"#6868E5",
+    paddingVertical:10,
+    borderRadius:10,
+    marginTop:25
   },
-  playButton: {
-    backgroundColor: "#7A42F4",
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  stopButton: {
-    backgroundColor: "#fff",
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: "center",
-    justifyContent: "center",
-  },
+  btn:{
+    fontSize:16,
+    color:"#fff",
+    textAlign:"center"
+  }
 });
 
 export default Timer;
