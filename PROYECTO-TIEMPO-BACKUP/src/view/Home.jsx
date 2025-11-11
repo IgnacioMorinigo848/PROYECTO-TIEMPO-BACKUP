@@ -94,7 +94,7 @@ const weeklyProgress = getWeeklyAssignmentProgress();
         >
           <View style={styles.titleContainer}>
             <Text style={styles.title}>
-              {new Date().toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }).replace(',', '')}
+              {new Date().toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }).replace(',', '').charAt(0).toUpperCase() + new Date().toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }).replace(',', '').slice(1)}
             </Text>
           </View>
 
