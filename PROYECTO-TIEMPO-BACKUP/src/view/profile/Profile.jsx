@@ -1,13 +1,15 @@
 import React from "react";
 import { View, Text, StyleSheet,Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { profile} from "../../helper/data";
+import { useData } from "../../context/DataContext";
 
 import HeaderComponent from "../../component/HeaderComponent";
 import TagsInfoComponent from "../../component/TagsInfoComponent";
 import TagsAwardsComponent from "../../component/TagsAwardsComponent";
 
 export default function Profile({ navigation }) {
+  const { getCurrentUser } = useData();
+  const currentUser = getCurrentUser();
   return (
     <SafeAreaView style={styles.safeArea}>
         <View style={{ width: "100%" }}>
@@ -20,23 +22,24 @@ export default function Profile({ navigation }) {
 
         <View style={styles.headerInfoContent}>
             <View style={styles.imageContent}>
-                <Image style={styles.image} source={profile.image} />
+                <Image style={styles.image} source={require("../../assets/Profile/profile-image.png")} />
             </View>
             <View style={styles.infoContent}>
-                <Text style={[styles.info,{fontSize:30,fontWeight:"bold"}]}>{profile.name}</Text>
-                <Text style={[styles.info,{fontSize:14}]}>Legajo: {profile.credential}</Text>
-                <Text style={[styles.info,{fontSize:14}]}>Equipo: {profile.team}</Text>
+                <Text style={[styles.info,{fontSize:30,fontWeight:"bold"}]}>{currentUser.name}</Text>
+                <Text style={[styles.info,{fontSize:14}]}>Legajo: {currentUser.credential}</Text>
+                <Text style={[styles.info,{fontSize:14}]}>Equipo: {currentUser.team}</Text>
             </View>
         </View>
 
         <View style={{alignItems:"center",width:"100%",marginVertical:20}}>
-            <TagsAwardsComponent tag={profile} change={true} width={"90%"} />
+            {/* You may want to show user's awards here instead of profile info */}
+            {/* Example: awards.filter(a => a.userId === users[0].id).map(...) */}
         </View>
 
-        <TagsInfoComponent label={"Número de teléfono"} info={profile.telephoneNumber} image={require("../../assets/Profile/icon-phone.png")}/>
-        <TagsInfoComponent label={"Mail"} info={profile.mail} image={require("../../assets/Profile/mail-icon.png")}/>
-        <TagsInfoComponent label={"Ubicación"} info={profile.location} image={require("../../assets/Profile/location-icon.png")}/>
-        <TagsInfoComponent label={"Zona horaria"} info={profile.timeZone} image={require("../../assets/Profile/zone-icon.png")}/>
+        <TagsInfoComponent label={"Número de teléfono"} info={currentUser.telephoneNumber} image={require("../../assets/Profile/icon-phone.png")}/>
+        <TagsInfoComponent label={"Mail"} info={currentUser.email} image={require("../../assets/Profile/mail-icon.png")}/>
+        <TagsInfoComponent label={"Ubicación"} info={currentUser.location} image={require("../../assets/Profile/location-icon.png")}/>
+        <TagsInfoComponent label={"Zona horaria"} info={currentUser.timeZone} image={require("../../assets/Profile/zone-icon.png")}/>
       </SafeAreaView>
     );
 }

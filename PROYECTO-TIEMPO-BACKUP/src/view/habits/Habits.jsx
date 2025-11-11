@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import HeaderComponent from "../../component/HeaderComponent";
 
 import TagsWeeklyProgress from "../../component/TagsWeeklyProgress";
-import { habits } from "../../helper/data";
+import { habits } from "../../helper/db";
 
 export default function Habits({navigation}){
     return(

@@ -5,6 +5,8 @@ import { MaterialIcons } from "@expo/vector-icons";
 const { height } = Dimensions.get("window");
 
 const TagsWeeklyProgress = ({ onPress, tag,active=false}) => {
+  const isCompleted = active && tag.completed >= tag.countRequirement;
+  
   return (
     <TouchableOpacity style={styles.container} onPress={onPress }>
       <View style={styles.iconContent}>
@@ -13,15 +15,16 @@ const TagsWeeklyProgress = ({ onPress, tag,active=false}) => {
       <View style={styles.infoContent}>
         {active && 
           <View>
-            <Text>{`${tag.phase}/${tag.phase + 1}`} completados</Text>
+            <Text>{`${tag.completed || 0}/${tag.countRequirement || 0}`} completados</Text>
           </View>
         }
         <Text style={styles.title}>{tag.title}</Text>
         { !active && <Text style={styles.subtitle}>{tag.subtitle}</Text>}
-        { active && <View style={styles.progressBarContent}>
+        { active && !isCompleted && <View style={styles.progressBarContent}>
             <View style={[styles.progressBar,{width:tag.progress + "%"}]}/>
         </View>
         }
+        { isCompleted && <Text style={styles.completedText}>✓ Completado</Text>}
       </View>
       <MaterialIcons name="chevron-right" size={30} color="#3E73C3"/>
 
@@ -51,13 +54,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginRight: 12,
+    
   },
   icon: {
     width: 30,
     height: 30,
   },
   infoContent: {
-    width:"80%",
+    flex: 1,
+    alignItems: "flex-start",
   },
   title: {
     fontSize: 16,
@@ -68,6 +73,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#000",
     marginTop: 2,
+  },
+  completedText: {
+    fontSize: 14,
+    color: "#6BBF5A",
+    fontWeight: "600",
+    marginTop: 2,
+    marginBottom: 4,
   },
    progressBarContent:{
         width:"80%",

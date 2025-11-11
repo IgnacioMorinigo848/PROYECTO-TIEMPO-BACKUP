@@ -35,7 +35,13 @@ const Timer = ({ navigation, route }) => {
   const handleStop = () => {
     if (time !== 0){
       setIsRunning(false);
-      navigation.navigate("Record",{time});
+      navigation.navigate("Record", {
+        time,
+        duration: time,
+        categoryId: tag.categoryId || tag.id,
+        habitId: tag.habitId || 'h1', // Default habit if not provided
+        categoryTitle: tag.title,
+      });
       setTime(0);
     }
   };

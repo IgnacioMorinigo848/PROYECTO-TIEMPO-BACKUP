@@ -1,10 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet,ImageBackground,TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useData } from "../../context/DataContext";
 
 export default function Record ({navigation,route}){
-    const { time } = route.params;
-    console.log(time)
+    const { time, duration, categoryId, habitId, categoryTitle } = route.params;
+    const { createTimeRecord, calculatePoints } = useData();
+    const [pointsEarned, setPointsEarned] = useState(0);
+    const [recordCreated, setRecordCreated] = useState(false);
+
+    useEffect(() => {
+        if (!recordCreated && categoryId && habitId) {
+            const points = calculatePoints(duration, categoryId);
+            setPointsEarned(points);
+            
+            // Create the time record
+            const newRecord = createTimeRecord(
+                categoryId,
+                habitId,
+                duration,
+                `Sesión de ${categoryTitle || 'actividad'}`
+            );
+            
+            setRecordCreated(true);
+            console.log('Record created:', newRecord);
+        }
+    }, [categoryId, habitId, duration, createTimeRecord, calculatePoints, recordCreated, categoryTitle]);
 
     const formatTime = (seconds) => {
     const hrs = Math.floor(seconds / 3600);
@@ -28,7 +49,7 @@ export default function Record ({navigation,route}){
                     <Text style={{textAlign:"center",fontSize:30,fontWeight:"bold",color:"#333333", paddingBottom:15,borderBottomWidth:3,borderEndColor:"#333333",}}>Tiempo registrado con éxito</Text>
                 </View>
                 <View style={{alignItems:"center",width:"80%",marginTop:15}}>
-                    <Text style={{textAlign:"center",fontSize:25,fontWeight:"bold",color:"#333333"}}>Ganaste 30 puntos</Text>
+                    <Text style={{textAlign:"center",fontSize:25,fontWeight:"bold",color:"#333333"}}>Ganaste {pointsEarned} puntos</Text>
                 </View>
                 <TouchableOpacity style={styles.btn} onPress={()=> navigation.navigate("Home")}>
                     <Text style={{color:"#fff",fontSize:14}}> Volver al inicio</Text>

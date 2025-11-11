@@ -8,7 +8,7 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import TagsAlertComponent from "./TagsAlertComponent";
-import { alerts } from "../helper/data";
+import { alerts } from "../helper/db";
 
 const SightComponent = ({ visible, onClose }) => {
   return (

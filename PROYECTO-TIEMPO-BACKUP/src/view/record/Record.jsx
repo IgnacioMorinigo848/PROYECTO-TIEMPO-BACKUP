@@ -1,12 +1,14 @@
 import React from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { record } from "../../helper/data";
+import { useData } from "../../context/DataContext";
 
 import HeaderComponent from "../../component/HeaderComponent";
 import TagsRecordComponent from "../../component/TagsRecordComponent";
 
 export default function Record({ navigation }) {
+  const { getUserTimeRecordsData, categories } = useData();
+  const userRecords = getUserTimeRecordsData();
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={{ width: "100%" }}>
@@ -29,10 +31,18 @@ export default function Record({ navigation }) {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {console.log(record)}
-        {record.map((tag, index) => (
-          <TagsRecordComponent key={index} tag={tag} />
-        ))}
+        {userRecords.map((record, index) => {
+          // Find category name for display
+          const category = categories.find(c => c.id === record.categoryId);
+          const displayRecord = {
+            ...record,
+            categorie: category?.title || 'Unknown',
+            time: record.time || '00:00:00',
+          };
+          return (
+            <TagsRecordComponent key={index} tag={displayRecord} />
+          );
+        })}
       </ScrollView>
     </SafeAreaView>
   );

@@ -1,12 +1,14 @@
 import React from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { awards,profile } from "../../helper/data";
+import { useData } from "../../context/DataContext";
 
 import HeaderComponent from "../../component/HeaderComponent";
 import TagsAwardsComponent from "../../component/TagsAwardsComponent";
 
 export default function PointEarned({ navigation }) {
+  const { getCurrentUser, awards } = useData();
+  const currentUser = getCurrentUser();
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={{ width: "100%" }}>
@@ -18,7 +20,7 @@ export default function PointEarned({ navigation }) {
       </View>
 
       <View style={{alignItems:"center",width:"100%"}}>
-        <TagsAwardsComponent tag={profile} change={true} width={"95%"} />
+          <TagsAwardsComponent tag={currentUser} change={true} width={"95%"} />
       </View>
 
       <View style={[styles.titleContainer,{marginVertical: 20}]}>
@@ -29,7 +31,7 @@ export default function PointEarned({ navigation }) {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {awards.map((tag, index) => (
+        {awards.filter(a => a.userId === currentUser.id).map((tag, index) => (
           <TagsAwardsComponent key={index} tag={tag} />
         ))}
       </ScrollView>

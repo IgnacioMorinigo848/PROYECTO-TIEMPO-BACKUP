@@ -1,4 +1,9 @@
 import React, { useState } from "react";
+import happyEmoji from "../assets/Emotion/happy.png";
+import sadEmoji from "../assets/Emotion/sad.png";
+import indifferentEmoji from "../assets/Emotion/indifferent.png";
+import motivatedEmoji from "../assets/Emotion/motivated.png";
+import frustratedEmoji from "../assets/Emotion/Frustrated.png";
 import {
   View,
   StyleSheet,
@@ -13,7 +18,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import HeaderComponent from "../component/HeaderComponent";
-import { emote, profile,moods,infoProgress,weeklyAssigment } from "../helper/data";
+import { useData } from "../context/DataContext";
 import TagsWeeklyProgress from "../component/TagsWeeklyProgress";
 import SightComponent from "../component/SightComponent";
 import ChatBotComponent from "../component/ChatBotComponent";
@@ -21,27 +26,49 @@ import ChatBotComponent from "../component/ChatBotComponent";
 const { height } = Dimensions.get("window");
 
 const Home = ({ navigation }) => {
-const [visible,setVisible] = useState(false);
+
+const emojiImages = {
+  "happy.png": happyEmoji,
+  "sad.png": sadEmoji,
+  "indifferent.png": indifferentEmoji,
+  "motivated.png": motivatedEmoji,
+  "Frustrated.png": frustratedEmoji,
+};
+
+const [visible, setVisible] = useState(false);
 const [modalVisible, setModalVisible] = useState(false);
-const [currentEmote, setCurrentEmote] = useState(emote.happy);
 const [selectedMood, setSelectedMood] = useState(null);
+const [hideMoodBar, setHideMoodBar] = useState(false);
+
+const {
+  emotes,
+  moods,
+  infoProgress,
+  getCurrentUser,
+  getWeeklyAssignmentProgress,
+  createMoodRecord,
+} = useData();
+
+const currentUser = getCurrentUser();
+const [currentEmote, setCurrentEmote] = useState(emotes.happy);
+const weeklyProgress = getWeeklyAssignmentProgress();
 
   const handleEmotionChange = (emotion) => {
     switch (emotion) {
       case "HAPPY":
-        setCurrentEmote(emote.happy);
+  setCurrentEmote(emotes.happy);
         break;
       case "SAD":
-        setCurrentEmote(emote.exhausted);
+  setCurrentEmote(emotes.exhausted);
         break;
       case "NEUTRAL":
-        setCurrentEmote(emote.unsure);
+  setCurrentEmote(emotes.unsure);
         break;
       case "TALKING":
-        setCurrentEmote(emote.noWords);
+  setCurrentEmote(emotes.noWords);
         break;
       default:
-        setCurrentEmote(emote.unsure);
+  setCurrentEmote(emotes.unsure);
     }
   };
 
@@ -56,86 +83,133 @@ const [selectedMood, setSelectedMood] = useState(null);
         style={styles.background}
         resizeMode="cover"
       >
+        <View style={{width:"100%"}}>
+          <HeaderComponent navigation={navigation} visibleButton={visibleButton}/>
+        </View>
 
-       <View style={{width:"100%"}}>
-         <HeaderComponent navigation={navigation} visibleButton={visibleButton}/>
-       </View>
-
-        <View style={styles.titleContainer}><Text style={styles.title} > {new Date().toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }).replace(',', '')}</Text></View>
-
-        <View style={styles.boxContainer}>
-
-          <View style={styles.profileContent}>
-            <Text style={styles.name}>{profile.name}</Text>
-            <View style={styles.pointsContainer}>
-              <View style={styles.imageContent}>
-                <Image style={styles.image} source={profile.image}/>
-              </View>
-              <View style={styles.pointsContent}>
-                <Text style={styles.text}>Tus puntos de salud son</Text>
-                <Text style={styles.points}>{profile.points}</Text>
-              </View>
-            </View>
+        <ScrollView 
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollViewContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>
+              {new Date().toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }).replace(',', '')}
+            </Text>
           </View>
 
-          <TouchableOpacity style={styles.emoteContet} onPress={() => setModalVisible(!modalVisible)}>
-            <Text style={styles.emoteTitle}>¿Necesitas ayuda?</Text>
-            <View style={styles.emoteInfoContent}>
-              <View style={styles.emoteImageContent}>
-                <Image style={styles.emoteImage} source={currentEmote}/>
+          <View style={styles.boxContainer}>
+            <View style={styles.profileContent}>
+              <Text style={styles.name}>{currentUser.name}</Text>
+              <View style={styles.pointsContainer}>
+                <View style={styles.imageContent}>
+                  <Image style={styles.image} source={require("../assets/Profile/profile-image.png")}/>
+                </View>
+                <View style={styles.pointsContent}>
+                  <Text style={styles.text}>Tus puntos de salud son</Text>
+                  <Text style={styles.points}>{currentUser.points}</Text>
+                </View>
               </View>
-              <Text style={styles.emoteText}>Hablá con Blu</Text>
             </View>
-          </TouchableOpacity>
 
-        </View>
+            <TouchableOpacity style={styles.emoteContet} onPress={() => setModalVisible(!modalVisible)}>
+              <Text style={styles.emoteTitle}>¿Necesitas ayuda?</Text>
+              <View style={styles.emoteInfoContent}>
+                <View style={styles.emoteImageContent}>
+                  <Image style={styles.emoteImage} source={currentEmote}/>
+                </View>
+                <Text style={styles.emoteText}>Hablá con Blu</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
 
-        <View style={styles.moodContainer}>
-      <Text style={styles.moodTitle}>{selectedMood ? `Hoy estas ${moods[selectedMood].label}` : `¿Como te sentís hoy?`}</Text>
-
-      <View style={styles.moodContent}>
-        {moods.map((mood, index) => (
-          <TouchableOpacity
-            key={index}
-            style={[
-              styles.moodItem,
-            ]}
-            onPress={() => setSelectedMood(index)}
-          >
-            <View style={styles.emojiContent}>
-            <Image style={[styles.emoji,selectedMood === index && { tintColor: mood.color, opacity: 1 }]} source={mood.emoji}/>
+          {!hideMoodBar && (
+            <View style={styles.moodContainer}>
+              {selectedMood === null ? (
+                <>
+                  <Text style={styles.moodTitle}>¿Como te sentís hoy?</Text>
+                  <View style={styles.moodContent}>
+                    {moods.map((mood, index) => (
+                      <TouchableOpacity
+                        key={index}
+                        style={[styles.moodItem]}
+                        onPress={() => {
+                          setSelectedMood(index);
+                          createMoodRecord(mood.id, `Usuario se siente ${mood.label.toLowerCase()}`);
+                          setTimeout(() => {
+                            setHideMoodBar(true);
+                            setTimeout(() => {
+                              setHideMoodBar(false);
+                              setSelectedMood(null);
+                            }, 120000);
+                          }, 3000);
+                        }}
+                      >
+                        <View style={styles.emojiContent}>
+                          <Image
+                            style={styles.emoji}
+                            source={emojiImages[mood.emoji]}
+                          />
+                        </View>
+                        <Text style={styles.label}>{mood.label}</Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </>
+              ) : (
+                <View style={styles.moodMessageContainer}>
+                  <View style={styles.moodMessageEmojiContent}>
+                    <Image
+                      style={styles.moodMessageEmoji}
+                      source={emojiImages[moods[selectedMood].emoji]}
+                    />
+                  </View>
+                  <Text style={styles.moodMessageTitle}>
+                    {selectedMood === 0 && "Entendemos que hoy es un día difícil. Recordá que está bien tomarte un respiro."}
+                    {selectedMood === 1 && "Es normal sentirse triste a veces. No dudes en hablar con alguien si lo necesitás."}
+                    {selectedMood === 2 && "A veces los días son así, neutros. Está bien tomarte las cosas con calma."}
+                    {selectedMood === 3 && "¡Qué bueno que te sientas feliz! Aprovechá este buen momento."}
+                    {selectedMood === 4 && "¡Excelente! Tu motivación es contagiosa. Seguí así."}
+                  </Text>
+                </View>
+              )}
             </View>
-            <Text style={styles.label}>{mood.label}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-        </View>
+          )}
 
-        <View style={styles.assigmentTitleCentent}><Text style={styles.assigmentTitle}>Completa tus hábitos diarios 🙌</Text></View>
+          <View style={styles.assigmentTitleCentent}>
+            <Text style={styles.assigmentTitle}>Completa tus hábitos diarios</Text>
+          </View>
 
-        <ScrollView
-          style={{ width: "90%", alignSelf: "center" }}
-        >
-          {weeklyAssigment.map((tag,index) => (
-           <TagsWeeklyProgress onPress={()=> navigation.navigate("TimerStack",{screen:"Timer",params:{tag:tag}})} tag={tag} active={true} key={index} />
-          ))}
-         {infoProgress.map((tag,index) => (
-           <TagsWeeklyProgress onPress={()=> navigation.navigate("HabitStack")} tag={tag} key={index}/>
-          ))}
+          <View style={styles.progressItemsContainer}>
+            {weeklyProgress.map((assignment, index) => (
+              <TagsWeeklyProgress
+                onPress={() => navigation.navigate("TimerStack", { screen: "Timer", params: { tag: assignment } })}
+                tag={assignment}
+                active={true}
+                key={index}
+              />
+            ))}
+            
+            {infoProgress.map((tag, index) => (
+              <TagsWeeklyProgress 
+                onPress={() => navigation.navigate("HabitStack")} 
+                tag={tag} 
+                key={index}
+              />
+            ))}
+          </View>
 
+          <View style={{marginTop: 30}} />
         </ScrollView>
-        <SightComponent visible={visible} onClose={() => setVisible(false)} />
-      <View style={{marginTop:30}}>
-        
-      </View>
 
-      <ChatBotComponent
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        onEmotionChange={handleEmotionChange}
-      />
+        <SightComponent visible={visible} onClose={() => setVisible(false)} />
+        
+        <ChatBotComponent
+          visible={modalVisible}
+          onClose={() => setModalVisible(false)}
+          onEmotionChange={handleEmotionChange}
+        />
       </ImageBackground>
-      
     </SafeAreaView>
   );
 };
@@ -149,7 +223,14 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center",
     width: "100%",
-    height:300
+  },
+  scrollView: {
+    flex: 1,
+    width: "100%",
+  },
+  scrollViewContent: {
+    alignItems: "center",
+    paddingBottom: 20,
   },
   titleContainer: {
     width: "100%",
@@ -203,6 +284,27 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 12,
+  },
+  moodMessageContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 15,
+  },
+  moodMessageEmojiContent: {
+    width: 50,
+    height: 50,
+    marginRight: 15,
+  },
+  moodMessageEmoji: {
+    width: '100%',
+    height: '100%',
+  },
+  moodMessageTitle: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#002055',
+    lineHeight: 22,
   },
   boxContainer:{
     width:"90%",
@@ -311,10 +413,14 @@ const styles = StyleSheet.create({
     marginBottom:10
   },
   assigmentTitle:{
-    fontSize:25,
+    paddingTop:12,
+    fontSize:22,
     color:"#002055",
     fontWeight:"bold",
     textAlign:"left",
+  },
+  progressItemsContainer:{
+    width: "90%",
   },
   contentContainerStyle:{
     paddingHorizontal: 20,

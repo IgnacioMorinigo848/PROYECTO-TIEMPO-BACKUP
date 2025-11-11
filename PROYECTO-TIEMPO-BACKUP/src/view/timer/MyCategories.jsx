@@ -1,12 +1,13 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { categories } from "../../helper/data";
+import { useData } from "../../context/DataContext";
 
 import HeaderComponent from "../../component/HeaderComponent";
 import TagsWeeklyProgress from "../../component/TagsWeeklyProgress";
 
 const MyCategories = ({ navigation }) => {
+  const { categories } = useData();
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={{ width: "100%" }}>
