@@ -35,18 +35,19 @@ const TagsWeeklyProgress = ({ onPress, tag,active=false}) => {
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    height: height * 0.09,
+    minHeight: height * 0.09,
     backgroundColor: "#ebf0faff",
     borderRadius: 12,
     marginVertical: 8,
     paddingHorizontal: 12,
+    paddingVertical: 12,
     flexDirection: "row",
     alignItems: "center",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
-    elevation: 10,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 5,
+    elevation: 5,
   },
   iconContent: {
     width: 50,
@@ -63,16 +64,20 @@ const styles = StyleSheet.create({
   infoContent: {
     flex: 1,
     alignItems: "flex-start",
+    paddingRight: 8,
   },
   title: {
     fontSize: 16,
     fontWeight: "bold",
     color: "#000",
+    flexShrink: 1,
   },
   subtitle: {
     fontSize: 14,
     color: "#000",
     marginTop: 2,
+    flexShrink: 1,
+    flexWrap: "wrap",
   },
   completedText: {
     fontSize: 14,
