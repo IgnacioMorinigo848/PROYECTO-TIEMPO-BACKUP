@@ -1,9 +1,9 @@
-import { credentials } from "./data";
+import { users } from "./db";
 const emailOrLegajoRegex = /^(?:[1-9][0-9]{7}|[^\s@]+@[^\s@]+\.[^\s@]+)$/;
 
 const passwordValidator = (password) =>{
     let result = "";
-    if(password.length < 8 || credentials.password !== password)
+    if(password.length < 8 || !users.some(user => user.password === password))
       result = "Ingresá tu contraseña";
     return result;
 };
@@ -15,11 +15,11 @@ const mailCredentialValidator = (mail) =>{
         result = "Ingresá un correo o legajo válido";
     } else {
 
-    if (/^[1-9][0-9]{7}$/.test(mail) && mail !== credentials.credential) {
+    if (/^[1-9][0-9]{7}$/.test(mail) && !users.some(user => user.credential === mail)) {
         result = "Ingresá un correo o legajo válido";
     }
 
-    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail) && mail !== credentials.mail) {
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail) && !users.some(user => user.email === mail)) {
         result = "Ingresá un correo o legajo válido";
     }
     }
@@ -33,7 +33,7 @@ const mailValidator = (mail) =>{
         result = "Ingresá un correo válido";
     } else {
 
-        if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail) && mail !== credentials.mail) {
+        if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail) && !users.some(user => user.email === mail)) {
             result = "Ingresá un correo válido";
         }
     }
