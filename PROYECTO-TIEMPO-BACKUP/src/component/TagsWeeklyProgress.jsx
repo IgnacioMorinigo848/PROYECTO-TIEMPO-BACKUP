@@ -5,22 +5,24 @@ import { MaterialIcons } from "@expo/vector-icons";
 const { height } = Dimensions.get("window");
 
 const TagsWeeklyProgress = ({ onPress, tag,active=false}) => {
-  const isCompleted = active && tag.completed >= tag.countRequirement;
+  const hasRequirement = tag.countRequirement && tag.countRequirement > 0;
+  const isCompleted = active && hasRequirement && tag.completed >= tag.countRequirement;
+  const showProgress = active && hasRequirement && !isCompleted;
   
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress }>
+    <TouchableOpacity style={styles.container} onPress={onPress} activeOpacity={0.7}>
       <View style={styles.iconContent}>
         <Image style={styles.icon} source={tag.icon} resizeMode="contain" />
       </View>
       <View style={styles.infoContent}>
-        {active && 
+        {showProgress && 
           <View>
-            <Text>{`${tag.completed || 0}/${tag.countRequirement || 0}`} completados</Text>
+            <Text>{`${tag.completed || 0}/${tag.countRequirement}`} completados</Text>
           </View>
         }
         <Text style={styles.title}>{tag.title}</Text>
         { !active && <Text style={styles.subtitle}>{tag.subtitle}</Text>}
-        { active && !isCompleted && <View style={styles.progressBarContent}>
+        { showProgress && <View style={styles.progressBarContent}>
             <View style={[styles.progressBar,{width:tag.progress + "%"}]}/>
         </View>
         }

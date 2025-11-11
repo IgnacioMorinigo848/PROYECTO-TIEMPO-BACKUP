@@ -30,10 +30,6 @@ const MyCategories = ({ navigation }) => {
             <TagsWeeklyProgress onPress={()=>navigation.navigate("TimerStack",{screen:"Timer",params:{tag:tag}})} tag={tag} active={true} key={index}/>
           ))}
         </View>
-
-        <TouchableOpacity style={[styles.titleContainer, { alignItems: "flex-end" }]}>
-          <Text style={{ fontSize: 18, color: "#CC68E5", fontWeight: "bold" }}>Crear nueva</Text>
-        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );

@@ -65,10 +65,14 @@ export const DataProvider = ({ children }) => {
   // Weekly assignment progress
   const getWeeklyAssignmentProgress = () => {
     dataVersion; // Access to trigger re-render
+    const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+    
     return weeklyAssignments.map(assignment => {
       const category = categories.find(c => c.id === assignment.categoryId);
       const completed = timeRecords.filter(
-        r => r.userId === currentUserId && r.categoryId === assignment.categoryId
+        r => r.userId === currentUserId && 
+            r.categoryId === assignment.categoryId &&
+            r.date === today
       ).length;
       
       return {

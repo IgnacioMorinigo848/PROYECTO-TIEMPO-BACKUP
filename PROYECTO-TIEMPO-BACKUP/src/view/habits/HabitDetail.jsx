@@ -25,7 +25,7 @@ export default function HabitDetail({navigation,route}){
             <View style={styles.detailContent}>
                 {detail && <Text style={styles.detail}>{detail}</Text>}
             </View>
-            <TouchableOpacity style={styles.btnContent}>
+            <TouchableOpacity style={styles.btnContent} activeOpacity={0.7}>
                 <Text style={styles.btn}>Quiero saber más</Text>
             </TouchableOpacity>
         </SafeAreaView>

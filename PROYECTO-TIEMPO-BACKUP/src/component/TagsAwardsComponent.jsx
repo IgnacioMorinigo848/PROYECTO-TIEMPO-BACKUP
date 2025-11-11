@@ -40,6 +40,7 @@ const TagsAwardsComponent = ({ tag, change = false, width="45%" }) => {
             style={[styles.button, !canAfford && styles.buttonDisabled]}
             onPress={handleRedeem}
             disabled={!canAfford}
+            activeOpacity={0.7}
           >
             <Text style={styles.buttonText}>
               {canAfford ? "Canjear" : "Puntos insuficientes"}
@@ -70,6 +71,7 @@ const TagsAwardsComponent = ({ tag, change = false, width="45%" }) => {
             <TouchableOpacity 
               style={[styles.modalButton, isSuccess ? styles.modalButtonSuccess : styles.modalButtonError]}
               onPress={() => setModalVisible(false)}
+              activeOpacity={0.7}
             >
               <Text style={styles.modalButtonText}>Aceptar</Text>
             </TouchableOpacity>

@@ -1,16 +1,11 @@
 import React from "react";
-import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, Dimensions } from "react-native";
 import Svg, { Circle } from "react-native-svg";
 
-const DonutChart = () => {
-  const data = [
-    { label: "Redes", value: 15, color: "#005CFF" },
-    { label: "Mobile", value: 4, color: "#FF8A00" },
-    { label: "Almuerzo", value: 25, color: "#21D07A" },
-    { label: "Internet", value: 40, color: "#FFD83D" },
-  ];
-
+const DonutChart = ({ data, period }) => {
   const total = data.reduce((acc, cur) => acc + cur.value, 0);
+  
+  const periodTitle = period === "daily" ? "Hoy" : period === "weekly" ? "Esta semana" : "Este mes";
 
   const { width } = Dimensions.get("window");
   const chartSize = width * 0.5; 
@@ -23,40 +18,46 @@ const DonutChart = () => {
   return (
     <View style={styles.container}>
       <View style={styles.headerContent}>
-        <TouchableOpacity><Text style={styles.headerItem}>{`<`}</Text></TouchableOpacity>
-        <Text style={styles.headerYear}>2025</Text>
-       <TouchableOpacity><Text style={styles.headerItem}>{`>`}</Text></TouchableOpacity>
+        <Text style={styles.headerYear}>Tiempo por categoría - {periodTitle}</Text>
       </View>
 
-      <View style={styles.chartWrapper}>
-        <Svg width={chartSize} height={chartSize} style={{ transform: [{ rotate: "-90deg" }] }}>
-          {data.map((item, index) => {
-            const percentage = item.value / total;
-            const strokeDasharray = circumference * percentage;
-            const circle = (
-              <Circle
-                key={index}
-                cx={chartSize / 2}
-                cy={chartSize / 2}
-                r={radius}
-                stroke={item.color}
-                strokeWidth={strokeWidth}
-                fill="none"
-                strokeDasharray={`${strokeDasharray} ${circumference}`}
-                strokeDashoffset={-offset}
-                strokeLinecap="round"
-              />
-            );
-            offset += strokeDasharray;
-            return circle;
-          })}
-        </Svg>
+      {total > 0 ? (
+        <>
+          <View style={styles.chartWrapper}>
+            <Svg width={chartSize} height={chartSize} style={{ transform: [{ rotate: "-90deg" }] }}>
+              {data.map((item, index) => {
+                const percentage = item.value / total;
+                const strokeDasharray = circumference * percentage;
+                const circle = (
+                  <Circle
+                    key={index}
+                    cx={chartSize / 2}
+                    cy={chartSize / 2}
+                    r={radius}
+                    stroke={item.color}
+                    strokeWidth={strokeWidth}
+                    fill="none"
+                    strokeDasharray={`${strokeDasharray} ${circumference}`}
+                    strokeDashoffset={-offset}
+                    strokeLinecap="round"
+                  />
+                );
+                offset += strokeDasharray;
+                return circle;
+              })}
+            </Svg>
 
-        <View style={styles.centerText}>
-          <Text style={styles.hours}>{total} hs.</Text>
-          <Text style={styles.label}>De distracciones</Text>
+            <View style={styles.centerText}>
+              <Text style={styles.hours}>{total.toFixed(1)} hs.</Text>
+              <Text style={styles.label}>Total</Text>
+            </View>
+          </View>
+        </>
+      ) : (
+        <View style={styles.noDataContainer}>
+          <Text style={styles.noDataText}>No hay datos para este periodo</Text>
         </View>
-      </View>
+      )}
 
       <View style={styles.legend}>
         {data.map((item, i) => (
@@ -85,17 +86,22 @@ const styles = StyleSheet.create({
   },
   headerContent: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
     width: "100%",
-    marginBottom: 10,
-  },
-  headerItem: {
-    fontSize: 20,
-    color: "#000",
+    marginBottom: 15,
   },
   headerYear: {
     fontSize: 18,
     fontWeight: "600",
+    color: "#333",
+  },
+  noDataContainer: {
+    paddingVertical: 40,
+    alignItems: "center",
+  },
+  noDataText: {
+    fontSize: 16,
+    color: "#999",
   },
   chartWrapper: {
     justifyContent: "center",

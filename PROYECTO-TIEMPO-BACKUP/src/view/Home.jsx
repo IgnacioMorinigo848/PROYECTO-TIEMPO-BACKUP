@@ -112,7 +112,7 @@ const weeklyProgress = getWeeklyAssignmentProgress();
               </View>
             </View>
 
-            <TouchableOpacity style={styles.emoteContet} onPress={() => setModalVisible(!modalVisible)}>
+            <TouchableOpacity style={styles.emoteContet} onPress={() => setModalVisible(!modalVisible)} activeOpacity={0.7}>
               <Text style={styles.emoteTitle}>¿Necesitas ayuda?</Text>
               <View style={styles.emoteInfoContent}>
                 <View style={styles.emoteImageContent}>
@@ -133,6 +133,7 @@ const weeklyProgress = getWeeklyAssignmentProgress();
                       <TouchableOpacity
                         key={index}
                         style={[styles.moodItem]}
+                        activeOpacity={0.7}
                         onPress={() => {
                           setSelectedMood(index);
                           createMoodRecord(mood.id, `Usuario se siente ${mood.label.toLowerCase()}`);

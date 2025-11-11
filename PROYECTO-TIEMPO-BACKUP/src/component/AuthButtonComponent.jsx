@@ -4,7 +4,7 @@ import { View,Text,TouchableOpacity,StyleSheet } from "react-native";
 const AuthButtonComponent = ({value="Ingresar",backgroundColor="#979797",onPress}) =>{
     return(
         <View style={styles.content}>
-            <TouchableOpacity style={[styles.button,{backgroundColor:backgroundColor}]} onPress={() => onPress()}>
+            <TouchableOpacity style={[styles.button,{backgroundColor:backgroundColor}]} onPress={() => onPress()} activeOpacity={0.7}>
                 <Text style={[styles.text,{color:"#fff"}]}>{value}</Text>
             </TouchableOpacity>
         </View>

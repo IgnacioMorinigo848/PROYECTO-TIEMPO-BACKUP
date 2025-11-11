@@ -8,7 +8,7 @@ const TagsAssigmentComponent = ({navigation,tag,index}) =>{
     const isActive = index === 0;
 
     return(
-        <TouchableOpacity style={[styles.container,isActive ? styles.activeContainer:styles.inactiveContainer]} onPress={() => navigation.navigate("TimerStack", {screen: "Timer",params: { selected: tag.assigment }})}>
+        <TouchableOpacity style={[styles.container,isActive ? styles.activeContainer:styles.inactiveContainer]} onPress={() => navigation.navigate("TimerStack", {screen: "Timer",params: { selected: tag.assigment }})} activeOpacity={0.7}>
             <View style={styles.titleContent}><Text style={[styles.title,isActive ? styles.activeText:styles.inactiveText]}>{tag.assigment}</Text></View>
             <View style={styles.itemProgressContent}>
                 <Text style={[styles.itemProgress,isActive ? styles.activeText:styles.inactiveText]}>Progreso</Text>
