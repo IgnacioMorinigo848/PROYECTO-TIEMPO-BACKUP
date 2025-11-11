@@ -82,6 +82,26 @@ export const DataProvider = ({ children }) => {
     });
   };
 
+  // Redeem award
+  const redeemAward = (awardId) => {
+    const user = getCurrentUser();
+    const award = awards.find(a => a.id === awardId);
+    
+    if (!award) {
+      return { success: false, message: 'Premio no encontrado' };
+    }
+    
+    if (user.points < award.points) {
+      return { success: false, message: 'No tenés suficientes puntos para canjear este premio' };
+    }
+    
+    // Deduct points
+    user.points -= award.points;
+    setDataVersion(v => v + 1); // Trigger re-render
+    
+    return { success: true, message: '¡Premio canjeado exitosamente!' };
+  };
+
   const value = {
     // Static data
     users,
@@ -109,6 +129,7 @@ export const DataProvider = ({ children }) => {
     createTimeRecord,
     createMoodRecord,
     calculatePoints,
+    redeemAward,
   };
 
   return (

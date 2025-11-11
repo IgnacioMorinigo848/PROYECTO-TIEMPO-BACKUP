@@ -11,7 +11,7 @@ const users = [
     telephoneNumber: '+541123234343',
     location: 'Buenos Aires, Argentina',
     timeZone: 'Buenos Aires (GMT - 3)',
-    points: 500,
+    points: 12000,
     password: '12345678',
     createdAt: '2025-01-01T10:00:00Z',
   },
