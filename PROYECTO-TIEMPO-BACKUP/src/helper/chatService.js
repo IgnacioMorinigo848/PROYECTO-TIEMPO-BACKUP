@@ -1,11 +1,54 @@
 // La clave de API debe ser proporcionada por el entorno,
+// Importar la base de datos simulada
+const { users } = require('./db');
+
+/**
+ * Retorna el usuario actual (usuario 1)
+ */
+const getCurrentUser = () => {
+    return users.find(u => u.id === 'u1');
+};
 // o si estás en un entorno RN puro, puedes cargarla desde un archivo .env.
 // Dejamos la variable de entorno vacía ya que este entorno la proporciona.
-const API_KEY = "AIzaSyBbC4ngfvAlBV0S1dAz9sRWhHFQEoRaH6c"; 
+const API_KEY = "AIzaSyAyooiton9gstrwcqYQYc4Y1usDTwPExZ4"; 
 const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent'
 // Instrucción del Sistema para Blu (mantenemos la definición de la personalidad y formato de respuesta)
-const SYSTEM_INSTRUCTION = `You are Blu, a friendly and empathetic companion. Your personality is caring, and a bit playful. You are speaking with a user in Spanish. Keep your responses concise and natural.
-    
+const db = require('./db');
+const currentUser = db.users.find(u => u.id === 'u1');
+const userTimeRecords = db.getUserTimeRecords('u1');
+const userMoodRecords = db.getUserMoodRecords('u1');
+const userAwards = db.awards.filter(a => a.userId === 'u1');
+const userAlerts = db.alerts.filter(a => a.userId === 'u1');
+const userInfoProgress = db.infoProgress.filter(ip => ip.userId === 'u1');
+
+const SYSTEM_INSTRUCTION = `You are Blu, a friendly and empathetic companion. Your personality is caring, and a bit playful. You are speaking with a user in Spanish. The user's profile is:
+Nombre: ${currentUser.name}
+Email: ${currentUser.email}
+Credencial: ${currentUser.credential}
+Equipo: ${currentUser.team}
+Teléfono: ${currentUser.telephoneNumber}
+Ubicación: ${currentUser.location}
+Zona horaria: ${currentUser.timeZone}
+Puntos: ${currentUser.points}
+Fecha de creación: ${currentUser.createdAt}
+
+Registros de tiempo:
+${JSON.stringify(userTimeRecords)}
+
+Registros de estado de ánimo:
+${JSON.stringify(userMoodRecords)}
+
+Premios:
+${JSON.stringify(userAwards)}
+
+Alertas:
+${JSON.stringify(userAlerts)}
+
+Progreso e información:
+${JSON.stringify(userInfoProgress)}
+
+Keep your responses concise and natural.
+
 Your response MUST be in two parts, separated by a line containing only '---'. 
 1. The first part is your conversational reply in Spanish.
 2. The second part is a JSON object with a single key 'emotion', indicating the most appropriate emotion for you to display based on the user's last message and the context of the conversation.
