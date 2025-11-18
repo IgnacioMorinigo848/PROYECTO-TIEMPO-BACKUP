@@ -164,89 +164,105 @@ export default function Statistics({ navigation }) {
         <HeaderComponent navigation={navigation} change={true} color={"#CC68E5"} />
       </View>
 
-      <View style={[styles.titleContainer,{marginVertical: 20}]}>
+      {/* Título fuera del scroll, arriba del filtro */}
+      <View style={[styles.titleContainer,{marginTop: 20, marginBottom: 10}]}> 
         <Text style={[styles.title,{fontSize: 30}]}>Mis estadísticas</Text>
+      </View>
+
+      {/* Selector de periodo debajo del título */}
+      <View style={[styles.periodSelector, {marginBottom: 20, width: '90%', alignSelf: 'center'}]}>
+        <TouchableOpacity 
+          style={[styles.periodButton, period === "daily" && styles.periodButtonActive]}
+          onPress={() => setPeriod("daily")}
+          activeOpacity={0.7}
+        >
+          <Text style={[styles.periodButtonText, period === "daily" && styles.periodButtonTextActive]}>
+            Diario
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+          style={[styles.periodButton, period === "weekly" && styles.periodButtonActive]}
+          onPress={() => setPeriod("weekly")}
+          activeOpacity={0.7}
+        >
+          <Text style={[styles.periodButtonText, period === "weekly" && styles.periodButtonTextActive]}>
+            Semanal
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+          style={[styles.periodButton, period === "monthly" && styles.periodButtonActive]}
+          onPress={() => setPeriod("monthly")}
+          activeOpacity={0.7}
+        >
+          <Text style={[styles.periodButtonText, period === "monthly" && styles.periodButtonTextActive]}>
+            Mensual
+          </Text>
+        </TouchableOpacity>
       </View>
 
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <StatisticsCircleComponent data={timeByCategory} period={period} />
-
-        {/* Selector de periodo */}
-        <View style={styles.periodSelector}>
-          <TouchableOpacity 
-            style={[styles.periodButton, period === "daily" && styles.periodButtonActive]}
-            onPress={() => setPeriod("daily")}
-            activeOpacity={0.7}
-          >
-            <Text style={[styles.periodButtonText, period === "daily" && styles.periodButtonTextActive]}>
-              Diario
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={[styles.periodButton, period === "weekly" && styles.periodButtonActive]}
-            onPress={() => setPeriod("weekly")}
-            activeOpacity={0.7}
-          >
-            <Text style={[styles.periodButtonText, period === "weekly" && styles.periodButtonTextActive]}>
-              Semanal
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={[styles.periodButton, period === "monthly" && styles.periodButtonActive]}
-            onPress={() => setPeriod("monthly")}
-            activeOpacity={0.7}
-          >
-            <Text style={[styles.periodButtonText, period === "monthly" && styles.periodButtonTextActive]}>
-              Mensual
-            </Text>
-          </TouchableOpacity>
-        </View>
+        {/* Gráfico circular solo si hay datos */}
+        {Array.isArray(timeByCategory) && timeByCategory.length > 0 ? (
+          <StatisticsCircleComponent data={timeByCategory} period={period} />
+        ) : (
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>No hay datos de tiempo por categoría</Text>
+          </View>
+        )}
 
         {/* ---- Gráfico de estados de ánimo ---- */}
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Estados de ánimo - {periodTitle}</Text>
-          <BarChart
-            data={moodData}
-            width={screenWidth - 60}
-            height={220}
-            fromZero
-            flatColor={true}
-            withCustomBarColorFromData={true}
-            segments={Math.max(...moodData.datasets[0].data) > 4 ? 4 : Math.max(...moodData.datasets[0].data)}
-            chartConfig={{
-              backgroundGradientFrom: "#ffffff",
-              backgroundGradientTo: "#ffffff",
-              decimalPlaces: 0,
-              color: (opacity = 1) => `rgba(0,0,0,${opacity})`,
-              labelColor: () => "#555",
-            }}
-            style={styles.chart}
-          />
+          {moodData.datasets[0].data.every(d => d === 0 || d === 0.1) ? (
+            <Text style={{color: '#888', marginVertical: 20}}>No hay datos disponibles</Text>
+          ) : (
+            <BarChart
+              data={moodData}
+              width={screenWidth - 60}
+              height={220}
+              fromZero
+              flatColor={true}
+              withCustomBarColorFromData={true}
+              segments={Math.max(...moodData.datasets[0].data) > 4 ? 4 : Math.max(...moodData.datasets[0].data)}
+              chartConfig={{
+                backgroundGradientFrom: "#ffffff",
+                backgroundGradientTo: "#ffffff",
+                decimalPlaces: 0,
+                color: (opacity = 1) => `rgba(0,0,0,${opacity})`,
+                labelColor: () => "#555",
+              }}
+              style={styles.chart}
+            />
+          )}
         </View>
 
         {/* ---- Gráfico de actividades ---- */}
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Actividades - {periodTitle}</Text>
-          <BarChart
-            data={activityData}
-            width={screenWidth - 60}
-            height={220}
-            fromZero
-            flatColor={true}
-            withCustomBarColorFromData={true}
-            segments={Math.max(...activityData.datasets[0].data) > 4 ? 4 : Math.max(...activityData.datasets[0].data)}
-            chartConfig={{
-              backgroundGradientFrom: "#ffffff",
-              backgroundGradientTo: "#ffffff",
-              decimalPlaces: 0,
-              color: (opacity = 1) => `rgba(0,0,0,${opacity})`,
-              labelColor: () => "#555",
-            }}
-            style={styles.chart}
-          />
+          {activityData.datasets[0].data.every(d => d === 0 || d === 0.1) ? (
+            <Text style={{color: '#888', marginVertical: 20}}>No hay datos disponibles</Text>
+          ) : (
+            <BarChart
+              data={activityData}
+              width={screenWidth - 60}
+              height={220}
+              fromZero
+              flatColor={true}
+              withCustomBarColorFromData={true}
+              segments={Math.max(...activityData.datasets[0].data) > 4 ? 4 : Math.max(...activityData.datasets[0].data)}
+              chartConfig={{
+                backgroundGradientFrom: "#ffffff",
+                backgroundGradientTo: "#ffffff",
+                decimalPlaces: 0,
+                color: (opacity = 1) => `rgba(0,0,0,${opacity})`,
+                labelColor: () => "#555",
+              }}
+              style={styles.chart}
+            />
+          )}
         </View>
 
       </ScrollView>
