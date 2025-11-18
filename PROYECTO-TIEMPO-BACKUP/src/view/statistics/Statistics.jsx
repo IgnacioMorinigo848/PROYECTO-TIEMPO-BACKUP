@@ -54,10 +54,12 @@ export default function Statistics({ navigation }) {
     const data = moods.map(m => moodCounts[m.id]);
     const colors = moods.map(m => (opacity = 1) => m.color);
 
+    const hasData = data.some(d => d > 0);
+    if (!hasData) return null;
     return {
       labels,
       datasets: [{
-        data: data.length > 0 && data.some(d => d > 0) ? data : [0.1],
+        data,
         colors,
       }],
     };
@@ -100,10 +102,12 @@ export default function Statistics({ navigation }) {
     const data = categories.map(c => categoryCounts[c.id]);
     const colors = categories.map(c => (opacity = 1) => c.color);
 
+    const hasData = data.some(d => d > 0);
+    if (!hasData) return null;
     return {
       labels,
       datasets: [{
-        data: data.length > 0 && data.some(d => d > 0) ? data : [0.1],
+        data,
         colors,
       }],
     };
@@ -164,89 +168,113 @@ export default function Statistics({ navigation }) {
         <HeaderComponent navigation={navigation} change={true} color={"#CC68E5"} />
       </View>
 
-      <View style={[styles.titleContainer,{marginVertical: 20}]}>
-        <Text style={[styles.title,{fontSize: 30}]}>Mis estadísticas</Text>
+      {/* Selector de periodo - MOVER ARRIBA */}
+      <View style={styles.periodSelector}>
+        <TouchableOpacity 
+          style={[styles.periodButton, period === "daily" && styles.periodButtonActive]}
+          onPress={() => setPeriod("daily")}
+          activeOpacity={0.7}
+        >
+          <Text style={[styles.periodButtonText, period === "daily" && styles.periodButtonTextActive]}>
+            Diario
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+          style={[styles.periodButton, period === "weekly" && styles.periodButtonActive]}
+          onPress={() => setPeriod("weekly")}
+          activeOpacity={0.7}
+        >
+          <Text style={[styles.periodButtonText, period === "weekly" && styles.periodButtonTextActive]}>
+            Semanal
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+          style={[styles.periodButton, period === "monthly" && styles.periodButtonActive]}
+          onPress={() => setPeriod("monthly")}
+          activeOpacity={0.7}
+        >
+          <Text style={[styles.periodButtonText, period === "monthly" && styles.periodButtonTextActive]}>
+            Mensual
+          </Text>
+        </TouchableOpacity>
       </View>
 
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <StatisticsCircleComponent data={timeByCategory} period={period} />
-
-        {/* Selector de periodo */}
-        <View style={styles.periodSelector}>
-          <TouchableOpacity 
-            style={[styles.periodButton, period === "daily" && styles.periodButtonActive]}
-            onPress={() => setPeriod("daily")}
-            activeOpacity={0.7}
-          >
-            <Text style={[styles.periodButtonText, period === "daily" && styles.periodButtonTextActive]}>
-              Diario
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={[styles.periodButton, period === "weekly" && styles.periodButtonActive]}
-            onPress={() => setPeriod("weekly")}
-            activeOpacity={0.7}
-          >
-            <Text style={[styles.periodButtonText, period === "weekly" && styles.periodButtonTextActive]}>
-              Semanal
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={[styles.periodButton, period === "monthly" && styles.periodButtonActive]}
-            onPress={() => setPeriod("monthly")}
-            activeOpacity={0.7}
-          >
-            <Text style={[styles.periodButtonText, period === "monthly" && styles.periodButtonTextActive]}>
-              Mensual
-            </Text>
-          </TouchableOpacity>
+        <View style={[styles.titleContainer,{marginVertical: 10}]}> 
+          <Text style={[styles.title,{fontSize: 30}]}>Mis estadísticas</Text>
         </View>
+        <StatisticsCircleComponent data={timeByCategory} period={period} />
 
         {/* ---- Gráfico de estados de ánimo ---- */}
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Estados de ánimo - {periodTitle}</Text>
-          <BarChart
-            data={moodData}
-            width={screenWidth - 60}
-            height={220}
-            fromZero
-            flatColor={true}
-            withCustomBarColorFromData={true}
-            segments={Math.max(...moodData.datasets[0].data) > 4 ? 4 : Math.max(...moodData.datasets[0].data)}
-            chartConfig={{
-              backgroundGradientFrom: "#ffffff",
-              backgroundGradientTo: "#ffffff",
-              decimalPlaces: 0,
-              color: (opacity = 1) => `rgba(0,0,0,${opacity})`,
-              labelColor: () => "#555",
-            }}
-            style={styles.chart}
-          />
+          {moodData ? (
+            <BarChart
+              data={moodData}
+              width={screenWidth - 60}
+              height={220}
+              fromZero={true}
+              yAxisLabel={''}
+              yAxisSuffix={''}
+              flatColor={true}
+              withCustomBarColorFromData={true}
+              segments={(() => {
+                const arr = Array.isArray(moodData?.datasets?.[0]?.data) ? moodData.datasets[0].data : [0];
+                const max = Math.max(...arr);
+                return max > 4 ? 4 : Math.max(1, max);
+              })()}
+              chartConfig={{
+                backgroundGradientFrom: "#ffffff",
+                backgroundGradientTo: "#ffffff",
+                decimalPlaces: 0,
+                color: (opacity = 1) => `rgba(0,0,0,${opacity})`,
+                labelColor: () => "#555",
+                propsForBackgroundLines: { stroke: '#eee' },
+                propsForLabels: { fontSize: 14 },
+              }}
+              style={styles.chart}
+              yAxisInterval={1}
+            />
+          ) : (
+            <Text style={{ textAlign: 'center', color: '#888', marginTop: 40 }}>
+              No hay registros de estados de ánimo para este periodo.
+            </Text>
+          )}
         </View>
 
         {/* ---- Gráfico de actividades ---- */}
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Actividades - {periodTitle}</Text>
-          <BarChart
-            data={activityData}
-            width={screenWidth - 60}
-            height={220}
-            fromZero
-            flatColor={true}
-            withCustomBarColorFromData={true}
-            segments={Math.max(...activityData.datasets[0].data) > 4 ? 4 : Math.max(...activityData.datasets[0].data)}
-            chartConfig={{
-              backgroundGradientFrom: "#ffffff",
-              backgroundGradientTo: "#ffffff",
-              decimalPlaces: 0,
-              color: (opacity = 1) => `rgba(0,0,0,${opacity})`,
-              labelColor: () => "#555",
-            }}
-            style={styles.chart}
-          />
+          {activityData ? (
+            <BarChart
+              data={activityData}
+              width={screenWidth - 60}
+              height={220}
+              fromZero={true}
+              flatColor={true}
+              withCustomBarColorFromData={true}
+              segments={(() => {
+                const arr = Array.isArray(activityData?.datasets?.[0]?.data) ? activityData.datasets[0].data : [0];
+                const max = Math.max(...arr);
+                return max > 4 ? 4 : Math.max(1, max);
+              })()}
+              chartConfig={{
+                backgroundGradientFrom: "#ffffff",
+                backgroundGradientTo: "#ffffff",
+                decimalPlaces: 0,
+                color: (opacity = 1) => `rgba(0,0,0,${opacity})`,
+                labelColor: () => "#555",
+              }}
+              style={styles.chart}
+            />
+          ) : (
+            <Text style={{ textAlign: 'center', color: '#888', marginTop: 40 }}>
+              No hay registros de actividades para este periodo.
+            </Text>
+          )}
         </View>
 
       </ScrollView>
@@ -261,9 +289,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   titleContainer: {
-    justifyContent:"flex-start",
-    width:"100%",
-    paddingHorizontal: 25,
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
   },
   title: {
     fontWeight: "bold",
