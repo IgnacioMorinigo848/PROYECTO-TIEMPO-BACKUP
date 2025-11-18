@@ -9,6 +9,11 @@ import TagsRecordComponent from "../../component/TagsRecordComponent";
 export default function Record({ navigation }) {
   const { getUserTimeRecordsData, categories } = useData();
   const userRecords = getUserTimeRecordsData();
+  const sortedRecords = userRecords.slice().sort((a, b) => {
+    const dateA = new Date(`${a.date}T${a.time || '00:00:00'}`);
+    const dateB = new Date(`${b.date}T${b.time || '00:00:00'}`);
+    return dateB - dateA;
+  });
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={{ width: "100%" }}>
@@ -31,7 +36,7 @@ export default function Record({ navigation }) {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {userRecords.map((record, index) => {
+        {sortedRecords.map((record, index) => {
           // Find category name for display
           const category = categories.find(c => c.id === record.categoryId);
           const displayRecord = {
