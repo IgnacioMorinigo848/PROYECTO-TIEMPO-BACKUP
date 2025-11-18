@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HeaderComponent from "../../component/HeaderComponent";
 import TagsWeeklyProgress from "../../component/TagsWeeklyProgress";
 
 const Timer = ({ navigation, route }) => {
+  const emoteHappy = require('../../assets/Emote/happy.png');
   const { tag } = route.params;
  
   // Estados del temporizador
@@ -48,13 +49,17 @@ const Timer = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-     
       <View style={{ width: "100%" }}>
         <HeaderComponent navigation={navigation} change={true} />
       </View>
 
       <View style={{ width: "90%", alignSelf: "center" }}>
         <TagsWeeklyProgress tag={tag} active={true} key={tag} />
+      </View>
+
+      {/* Large centered emote image */}
+      <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 80, marginBottom: 0 }}>
+        <Image source={emoteHappy} style={{ width: 180, height: 180, resizeMode: 'contain' }} />
       </View>
 
       <View style={styles.timerContainer}>

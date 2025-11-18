@@ -8,7 +8,12 @@ import TagsRecordComponent from "../../component/TagsRecordComponent";
 
 export default function Record({ navigation }) {
   const { getUserTimeRecordsData, categories } = useData();
-  const userRecords = getUserTimeRecordsData();
+  const userRecords = getUserTimeRecordsData().slice().sort((a, b) => {
+    // Sort by date descending, then by time descending
+    const dateA = new Date(`${a.date}T${a.time}`);
+    const dateB = new Date(`${b.date}T${b.time}`);
+    return dateB - dateA;
+  });
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={{ width: "100%" }}>

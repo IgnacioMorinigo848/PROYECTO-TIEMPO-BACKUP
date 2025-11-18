@@ -116,7 +116,7 @@ const weeklyProgress = getWeeklyAssignmentProgress();
               <Text style={styles.emoteTitle}>¿Necesitas ayuda?</Text>
               <View style={styles.emoteInfoContent}>
                 <View style={styles.emoteImageContent}>
-                  <Image style={styles.emoteImage} source={currentEmote}/>
+                  <Image style={styles.emoteImage} source={require('../assets/Emote/happy.png')}/>
                 </View>
                 <Text style={styles.emoteText}>Hablá con Blu</Text>
               </View>
