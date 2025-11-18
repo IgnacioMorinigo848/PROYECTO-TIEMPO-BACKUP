@@ -3,11 +3,11 @@
 const users = [
   {
     id: 'u1',
-    name: 'Carolina Fernandez',
-    email: 'c.fernandez@empresa.com',
+    name: 'Juan Alvarez',
+    email: 'jalvarez@gmail.com',
     avatar: 'profile-image.png',
     credential: '1123423',
-    team: 'Marketing',
+    team: 'Programador',
     telephoneNumber: '+541123234343',
     location: 'Buenos Aires, Argentina',
     timeZone: 'Buenos Aires (GMT - 3)',
