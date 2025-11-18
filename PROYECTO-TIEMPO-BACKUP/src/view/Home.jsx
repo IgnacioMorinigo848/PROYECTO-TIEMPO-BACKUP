@@ -21,7 +21,6 @@ import HeaderComponent from "../component/HeaderComponent";
 import { useData } from "../context/DataContext";
 import TagsWeeklyProgress from "../component/TagsWeeklyProgress";
 import SightComponent from "../component/SightComponent";
-import ChatBotComponent from "../component/ChatBotComponent";
 
 const { height } = Dimensions.get("window");
 
@@ -112,18 +111,17 @@ const weeklyProgress = getWeeklyAssignmentProgress();
               </View>
             </View>
 
-            <TouchableOpacity style={styles.emoteContet} onPress={() => setModalVisible(!modalVisible)} activeOpacity={0.7}>
+            <TouchableOpacity style={styles.emoteContet} onPress={() => navigation.navigate("ChatBot",{list:"initialMessage"})} activeOpacity={0.7}>
               <Text style={styles.emoteTitle}>¿Necesitas ayuda?</Text>
               <View style={styles.emoteInfoContent}>
                 <View style={styles.emoteImageContent}>
-                  <Image style={styles.emoteImage} source={require('../assets/Emote/happy.png')}/>
+                  <Image style={styles.emoteImage} source={currentEmote}/>
                 </View>
                 <Text style={styles.emoteText}>Hablá con Blu</Text>
               </View>
             </TouchableOpacity>
           </View>
 
-          {!hideMoodBar && (
             <View style={styles.moodContainer}>
               {selectedMood === null ? (
                 <>
@@ -175,7 +173,7 @@ const weeklyProgress = getWeeklyAssignmentProgress();
                 </View>
               )}
             </View>
-          )}
+          
 
           <View style={styles.assigmentTitleCentent}>
             <Text style={styles.assigmentTitle}>Completa tus hábitos diarios</Text>
@@ -193,7 +191,7 @@ const weeklyProgress = getWeeklyAssignmentProgress();
             
             {infoProgress.map((tag, index) => (
               <TagsWeeklyProgress 
-                onPress={() => navigation.navigate("HabitStack")} 
+                onPress={() => navigation.navigate(tag.route)} 
                 tag={tag} 
                 key={index}
               />
@@ -205,11 +203,6 @@ const weeklyProgress = getWeeklyAssignmentProgress();
 
         <SightComponent visible={visible} onClose={() => setVisible(false)} />
         
-        <ChatBotComponent
-          visible={modalVisible}
-          onClose={() => setModalVisible(false)}
-          onEmotionChange={handleEmotionChange}
-        />
       </ImageBackground>
     </SafeAreaView>
   );
@@ -224,6 +217,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center",
     width: "100%",
+    height:300
   },
   scrollView: {
     flex: 1,

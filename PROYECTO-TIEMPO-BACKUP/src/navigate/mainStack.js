@@ -9,6 +9,7 @@ import Profile from "../view/profile/Profile";
 import Statistics from "../view/statistics/Statistics";
 import AuthStack from "./authStack";
 import HabitStack from "./habitStack";
+import ChatBot from "../view/chatBot/ChatBot";
 
 const Stack = createStackNavigator();
 
@@ -23,6 +24,7 @@ export default function MainStack () {
             <Stack.Screen name="PointEarned" component={PointEarned} options={{headerShown:false}}/>
             <Stack.Screen name="Profile" component={Profile} options={{headerShown:false}}/>
             <Stack.Screen name="HabitStack" component={HabitStack} options={{headerShown:false}}/>
+            <Stack.Screen name="ChatBot" component={ChatBot} options={{headerShown:false}}/>
         </Stack.Navigator>
     );
 }

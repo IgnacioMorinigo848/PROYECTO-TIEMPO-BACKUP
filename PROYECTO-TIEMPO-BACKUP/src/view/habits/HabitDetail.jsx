@@ -5,7 +5,7 @@ import HeaderComponent from "../../component/HeaderComponent";
 
 export default function HabitDetail({navigation,route}){
 
-    const { title,detail } = route.params;
+    const {tag } = route.params;
 
     return(
         <SafeAreaView style={styles.container}>
@@ -14,19 +14,19 @@ export default function HabitDetail({navigation,route}){
             </View>
              <View style={[styles.titleContainer,{marginVertical: 20,}]}>
                 <View style={styles.titleContent}>
-                    <Text style={styles.title}>{title}</Text>
+                    <Text style={styles.title}>{tag.title}</Text>
                 </View>
                 <View style={styles.iconContainer}>
                     <View style={styles.iconContent}> 
-                        <Image style={styles.icon} source={require("../../assets/Emote/confused.png")}/>
+                        <Image style={styles.icon} source={tag.icon}/>
                     </View>
                 </View>
             </View>
             <View style={styles.detailContent}>
-                {detail && <Text style={styles.detail}>{detail}</Text>}
+                {tag.detail && <Text style={styles.detail}>{tag.detail}</Text>}
             </View>
-            <TouchableOpacity style={styles.btnContent} activeOpacity={0.7}>
-                <Text style={styles.btn}>Quiero saber más</Text>
+            <TouchableOpacity style={styles.btnContent} activeOpacity={0.7} onPress={ () =>{tag.route === "Timer" ? navigation.replace("TimerStack",{screen:"Timer",params:{tag}}):navigation.navigate("ChatBot",{list:tag.list})}}>
+                <Text style={styles.btn}>  { tag.btn ? tag.btn : `Quiero registrar mi actividad` }</Text>
             </TouchableOpacity>
         </SafeAreaView>
     );

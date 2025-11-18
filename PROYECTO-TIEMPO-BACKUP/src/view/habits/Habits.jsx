@@ -7,6 +7,7 @@ import TagsWeeklyProgress from "../../component/TagsWeeklyProgress";
 import { habits } from "../../helper/db";
 
 export default function Habits({navigation}){
+  
     return(
         <SafeAreaView style={styles.container}>
             <View style={{ width: "100%" }}>
@@ -19,7 +20,7 @@ export default function Habits({navigation}){
                 style={{ width: "90%", alignSelf: "center" }}
             >
                 {habits.map((tag,index) => (
-                <TagsWeeklyProgress onPress={()=> navigation.navigate("HabitDetail",{title:tag.title,detail:tag.detail})} tag={tag} key={index} />
+                <TagsWeeklyProgress onPress={()=> navigation.navigate("HabitDetail",{tag:tag})} tag={tag} key={index} />
                 ))}
 
             </ScrollView>

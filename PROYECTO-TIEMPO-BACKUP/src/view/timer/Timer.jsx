@@ -1,13 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet,Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HeaderComponent from "../../component/HeaderComponent";
 import TagsWeeklyProgress from "../../component/TagsWeeklyProgress";
+import { useData } from "../../context/DataContext";
 
 const Timer = ({ navigation, route }) => {
-  const emoteHappy = require('../../assets/Emote/happy.png');
   const { tag } = route.params;
  
+  const {
+    emotes
+  } = useData();
+
   // Estados del temporizador
   const [isRunning, setIsRunning] = useState(false);
   const [time, setTime] = useState(0);
@@ -49,6 +53,7 @@ const Timer = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+     
       <View style={{ width: "100%" }}>
         <HeaderComponent navigation={navigation} change={true} />
       </View>
@@ -57,9 +62,10 @@ const Timer = ({ navigation, route }) => {
         <TagsWeeklyProgress tag={tag} active={true} key={tag} />
       </View>
 
-      {/* Large centered emote image */}
-      <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 80, marginBottom: 0 }}>
-        <Image source={emoteHappy} style={{ width: 180, height: 180, resizeMode: 'contain' }} />
+      <View style={{width:"100%",alignItems:"center",paddingTop:150,paddingBottom:30}}>
+      <View style={styles.emoteContent}>
+        <Image style={styles.emote} source={emotes.happy}/>
+      </View>
       </View>
 
       <View style={styles.timerContainer}>
@@ -97,7 +103,6 @@ const styles = StyleSheet.create({
   timerContainer: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
   },
   content:{
     width:"60%",
@@ -116,7 +121,16 @@ const styles = StyleSheet.create({
     fontSize: 52,
     fontWeight: "bold",
   },
- btnContent:{
+  emoteContent:{
+    width:200,
+    height:200,
+  },
+  emote:{
+    width:"100%",
+    height:"100%",
+    resizeMode:"contain",
+  },
+  btnContent:{
     width:"90%",
     alignItems:"center",
     backgroundColor:"#6868E5",

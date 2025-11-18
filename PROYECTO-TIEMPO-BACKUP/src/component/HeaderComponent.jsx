@@ -71,7 +71,7 @@ const HeaderComponent = ({ navigation,change=false,show=true,color="#fff" ,visib
                     <Text style={styles.menuText}>Registrar actividad</Text>
                   </TouchableOpacity>
 
-                  <TouchableOpacity style={styles.menuItem} onPress={()=> navigation.getParent()?.replace("Record")}>
+                  <TouchableOpacity style={styles.menuItem} onPress={()=> navigation.navigate("Record")}>
                     <Ionicons name="time-outline" size={24} color="#7A5AF5" />
                     <Text style={styles.menuText}>Ver historial</Text>
                   </TouchableOpacity>

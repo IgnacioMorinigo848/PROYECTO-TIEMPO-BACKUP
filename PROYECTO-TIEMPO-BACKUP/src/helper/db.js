@@ -3,11 +3,11 @@
 const users = [
   {
     id: 'u1',
-    name: 'Juan Alvarez',
-    email: 'jalvarez@gmail.com',
+    name: 'Carolina Fernandez',
+    email: 'c.fernandez@empresa.com',
     avatar: 'profile-image.png',
     credential: '1123423',
-    team: 'Programador',
+    team: 'Marketing',
     telephoneNumber: '+541123234343',
     location: 'Buenos Aires, Argentina',
     timeZone: 'Buenos Aires (GMT - 3)',
@@ -98,6 +98,8 @@ const habits = [
     title: 'Mindfullness',
     subtitle: 'Ayuda a liberar el estrés, calmar la mente y reconectarte contigo mismo, saliendo del piloto automático.',
     detail: 'El mindfulness, o atención plena, es una práctica que consiste en centrar la atención en el momento presente, de manera consciente y sin juzgar. A través de la meditación y otras técnicas, se busca desarrollar una mayor conexión con uno mismo y con el entorno. Entre sus principales beneficios se encuentran la reducción del estrés y la ansiedad, la mejora de la concentración, el aumento del bienestar emocional y una mayor capacidad para gestionar las emociones. Practicar mindfulness de forma regular puede ayudarte a vivir de manera más tranquila, equilibrada y plena.',
+    btn:"Quiero registrar mi pausa",
+     route:"Timer"
   },
   {
     id: 'h2',
@@ -105,6 +107,8 @@ const habits = [
     title: 'Salir a dar un paseo',
     subtitle: 'Aprovechar los momentos de pausa como el almuerzo para dar un paseo de unos minutos y respirar aire fresco.',
     detail: 'Salir a dar un paseo durante el horario de almuerzo es una excelente forma de despejar la mente y recargar energía para el resto del día. Caminar unos minutos al aire libre ayuda a reducir el estrés, mejorar el estado de ánimo y fomentar la creatividad. Además, es una pausa saludable que permite desconectarse un poco del trabajo y volver con más concentración y buen ánimo.',
+    btn:"Quiero registrar mi paseo",
+     route:"Timer"
   },
   {
     id: 'h3',
@@ -112,6 +116,9 @@ const habits = [
     title: 'Hacer ejercicio',
     subtitle: 'Hacer ejercicio mejora tu salud, aumenta tu energía y reduce el estrés. Te ayuda a mantener una mente más clara y enfocada.',
     detail: 'Hacer ejercicio antes o después del trabajo ofrece numerosos beneficios tanto físicos como mentales. Realizar actividad física ayuda a liberar el estrés acumulado, mejora la concentración y aumenta los niveles de energía. Además, contribuye a mantener una buena salud cardiovascular y a mejorar el estado de ánimo, lo que se traduce en un mejor rendimiento durante la jornada laboral y una sensación general de bienestar.',
+    btn:"Quiero armar una rutina con Blu",
+    route:"ChatBot",
+    list:"workout"
   },
   {
     id: 'h4',
@@ -119,6 +126,9 @@ const habits = [
     title: 'Anotar lo que te sucede',
     subtitle: 'Escribir sobre tus experiencias favorece la salud mental porque permite comprender mejor las emociones, aliviar el estrés y aclarar los pensamientos.',
     detail: 'Anotar lo que te pasa en el trabajo puede ser súper útil. Te ayuda a entender mejor cómo te sentís, a descargar el estrés y a poner un poco de orden en la cabeza cuando todo parece un lío. Además, escribir sobre tus experiencias te da otra perspectiva de lo que vivís día a día y puede ayudarte a manejar mejor las emociones que surgen en el laburo. Y si preferís conversarlo en vez de escribirlo, también podés contárselo a Blu. A veces poner en palabras lo que te pasa —aunque sea en una conversación con una herramienta digital— ayuda a aclarar ideas, bajar la tensión y encontrar nuevas formas de ver las cosas. Es una buena manera de hacer una pausa, reflexionar y seguir adelante con más claridad.',
+    btn:"Quiero hablar con Blu sobre lo que me sucede",
+    route:"ChatBot",
+    list:"note"
   },
 ];
 
@@ -146,86 +156,6 @@ const timeRecords = [
     notes: 'Ir a caminar',
     createdAt: '2025-11-11T14:30:00Z',
   },
-    // Hoy (18 Nov)
-    {
-      id: 'tr_today_1',
-      userId: 'u1',
-      categoryId: 'c1',
-      duration: 900, // 15 minutes
-      points: 120,
-      date: '2025-11-18',
-      time: '09:00:00',
-      notes: 'Tomarse un break',
-      createdAt: '2025-11-18T09:00:00Z',
-    },
-    {
-      id: 'tr_today_2',
-      userId: 'u2',
-      categoryId: 'c4',
-      duration: 1800, // 30 minutes
-      points: 200,
-      date: '2025-11-18',
-      time: '13:00:00',
-      notes: 'Almuerzo/Café',
-      createdAt: '2025-11-18T13:00:00Z',
-    },
-    // Más registros de hoy (18 Nov)
-    {
-      id: 'tr_today_3',
-      userId: 'u1',
-      categoryId: 'c3',
-      duration: 1200, // 20 minutos
-      points: 180,
-      date: '2025-11-18',
-      time: '17:00:00',
-      notes: 'Ir a caminar',
-      createdAt: '2025-11-18T17:00:00Z',
-    },
-    {
-      id: 'tr_today_4',
-      userId: 'u2',
-      categoryId: 'c2',
-      duration: 600, // 10 minutos
-      points: 80,
-      date: '2025-11-18',
-      time: '18:00:00',
-      notes: 'Mobile',
-      createdAt: '2025-11-18T18:00:00Z',
-    },
-    // Registros de esta semana (del 12 al 17 Nov)
-    {
-      id: 'tr_week_1',
-      userId: 'u1',
-      categoryId: 'c1',
-      duration: 600,
-      points: 100,
-      date: '2025-11-16',
-      time: '10:00:00',
-      notes: 'Break domingo',
-      createdAt: '2025-11-16T10:00:00Z',
-    },
-    {
-      id: 'tr_week_2',
-      userId: 'u1',
-      categoryId: 'c4',
-      duration: 1800,
-      points: 200,
-      date: '2025-11-15',
-      time: '13:00:00',
-      notes: 'Almuerzo sábado',
-      createdAt: '2025-11-15T13:00:00Z',
-    },
-    {
-      id: 'tr_week_3',
-      userId: 'u2',
-      categoryId: 'c3',
-      duration: 900,
-      points: 120,
-      date: '2025-11-14',
-      time: '19:00:00',
-      notes: 'Caminar viernes',
-      createdAt: '2025-11-14T19:00:00Z',
-    },
   {
     id: 'tr2',
     userId: 'u1',
@@ -471,81 +401,6 @@ const moodRecords = [
     note: 'Motivado después de caminar',
     createdAt: '2025-11-11T14:00:00Z',
   },
-    // Hoy (18 Nov)
-    {
-      id: 'mr_today_1',
-      userId: 'u1',
-      moodId: 'm5',
-      date: '2025-11-18',
-      time: '08:30:00',
-      note: 'Motivado para empezar la semana',
-      createdAt: '2025-11-18T08:30:00Z',
-    },
-    {
-      id: 'mr_today_2',
-      userId: 'u2',
-      moodId: 'm2',
-      date: '2025-11-18',
-      time: '15:00:00',
-      note: 'Triste por el clima',
-      createdAt: '2025-11-18T15:00:00Z',
-    },
-    // Más registros de hoy (18 Nov)
-    {
-      id: 'mr_today_3',
-      userId: 'u1',
-      moodId: 'm4',
-      date: '2025-11-18',
-      time: '12:00:00',
-      note: 'Feliz por el almuerzo',
-      createdAt: '2025-11-18T12:00:00Z',
-    },
-    {
-      id: 'mr_today_4',
-      userId: 'u2',
-      moodId: 'm3',
-      date: '2025-11-18',
-      time: '18:30:00',
-      note: 'Indiferente por la tarde',
-      createdAt: '2025-11-18T18:30:00Z',
-    },
-      {
-        id: 'mr_today_5',
-        userId: 'u1',
-        moodId: 'm5',
-        date: '2025-11-18',
-        time: '20:00:00',
-        note: 'Motivado por terminar el día',
-        createdAt: '2025-11-18T20:00:00Z',
-      },
-    // Registros de esta semana (del 12 al 17 Nov)
-    {
-      id: 'mr_week_1',
-      userId: 'u1',
-      moodId: 'm2',
-      date: '2025-11-16',
-      time: '09:00:00',
-      note: 'Triste por el clima',
-      createdAt: '2025-11-16T09:00:00Z',
-    },
-    {
-      id: 'mr_week_2',
-      userId: 'u2',
-      moodId: 'm5',
-      date: '2025-11-15',
-      time: '11:00:00',
-      note: 'Motivado por el fin de semana',
-      createdAt: '2025-11-15T11:00:00Z',
-    },
-    {
-      id: 'mr_week_3',
-      userId: 'u1',
-      moodId: 'm3',
-      date: '2025-11-14',
-      time: '17:00:00',
-      note: 'Indiferente por trabajo',
-      createdAt: '2025-11-14T17:00:00Z',
-    },
   {
     id: 'mr1c',
     userId: 'u1',
@@ -873,6 +728,7 @@ const infoProgress = [
     title: 'Seguir leyendo',
     subtitle: 'Aprender un nuevo hábito hoy para mejorar mi estilo de vida',
     icon: require('../assets/Home/book.png'),
+    route:"HabitStack"
   },
   {
     id: 'ip2',
@@ -880,14 +736,16 @@ const infoProgress = [
     title: 'Ver seguimiento',
     subtitle: 'Visualizá tus logros hasta el momento',
     icon: require('../assets/Home/progressBar.png'),
+    route:"Statistics"
   },
 ];
 
 const emotes = {
-  happy: 'happy.png',
-  exhausted: 'exhausted.png',
-  noWords: 'noWords.png',
-  unsure: 'unsure.png',
+  happy: require("../assets/Emote/happy.png"),
+  exhausted:  require("../assets/Emote/exhausted.png"),
+  noWords:  require("../assets/Emote/noWords.png"),
+  unsure:  require("../assets/Emote/unsure.png"),
+  confused: require("../assets/Emote/confused.png")
 };
 
 // Data mutation functions
