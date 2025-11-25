@@ -31,6 +31,7 @@ export const useData = () => {
 export const DataProvider = ({ children }) => {
   const [currentUserId] = useState('u1'); // Current logged-in user
   const [dataVersion, setDataVersion] = useState(0); // Used to trigger re-renders
+  const [chatMessages, setChatMessages] = useState({}); // Store chat messages by screen
 
   // Data getters
   const getCurrentUser = () => {
@@ -48,6 +49,10 @@ export const DataProvider = ({ children }) => {
     return getUserMoodRecords(userId);
   };
 
+  const getChatMessages = (screen) => {
+    return chatMessages[screen] || [];
+  };
+
   // Data mutations
   const createTimeRecord = (categoryId, habitId, duration, notes = '') => {
     const points = calculatePoints(duration, categoryId);
@@ -60,6 +65,13 @@ export const DataProvider = ({ children }) => {
     const record = addMoodRecord(currentUserId, moodId, note);
     setDataVersion(v => v + 1); // Trigger re-render
     return record;
+  };
+
+  const saveChatMessage = (screen, messages) => {
+    setChatMessages((prev) => ({
+      ...prev,
+      [screen]: messages,
+    }));
   };
 
   // Weekly assignment progress
@@ -128,12 +140,14 @@ export const DataProvider = ({ children }) => {
     getUserTimeRecordsData,
     getUserMoodRecordsData,
     getWeeklyAssignmentProgress,
+    getChatMessages,
     
     // Data mutations
     createTimeRecord,
     createMoodRecord,
     calculatePoints,
     redeemAward,
+    saveChatMessage,
   };
 
   return (

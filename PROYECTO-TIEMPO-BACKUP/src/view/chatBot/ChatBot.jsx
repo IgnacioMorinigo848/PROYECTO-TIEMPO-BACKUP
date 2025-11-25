@@ -8,10 +8,15 @@ import {
   TextInput,
   ActivityIndicator,
   Image,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { sendMessageToAI } from "../../helper/chatService";
+import { useData } from "../../context/DataContext";
 
 const CharacterState = {
   HAPPY: "HAPPY",
@@ -89,18 +94,13 @@ const ChatBubble = ({ message }) => {
 
 export default function ChatBot({ navigation, route }) {
   const { list = "initialMessage" } = route.params;
+  const { getChatMessages, saveChatMessage } = useData();
 
-  const getList = () => {
-    if (list === "note") return note;
-    if (list === "workout") return workout;
-    return initialMessage; // siempre array
-  };
-
-  const [messages, setMessages] = useState(getList());
+  const [messages, setMessages] = useState(getChatMessages(list));
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [characterState, setCharacterState] = useState(
-    initialMessage[0].emotion
+    messages.length > 0 ? messages[messages.length - 1].emotion : CharacterState.NEUTRAL
   );
 
   const scrollRef = useRef(null);
@@ -115,19 +115,17 @@ export default function ChatBot({ navigation, route }) {
       content: trimmedInput,
     };
 
-    setMessages((prev) => [...prev, userMsg]);
+    const updatedMessages = [...messages, userMsg];
+    setMessages(updatedMessages);
+    saveChatMessage(list, updatedMessages);
     setInputText("");
     setIsLoading(true);
     setCharacterState(CharacterState.TALKING);
 
     try {
-      const response = await sendMessageToAI(
-        [...messages, userMsg],
-        trimmedInput
-      );
+      const response = await sendMessageToAI(updatedMessages, trimmedInput);
 
-      const newEmotion =
-        response.emotion || CharacterState.NEUTRAL;
+      const newEmotion = response.emotion || CharacterState.NEUTRAL;
 
       const botMsg = {
         id: Date.now() + 1,
@@ -136,7 +134,9 @@ export default function ChatBot({ navigation, route }) {
         emotion: newEmotion,
       };
 
-      setMessages((prev) => [...prev, botMsg]);
+      const finalMessages = [...updatedMessages, botMsg];
+      setMessages(finalMessages);
+      saveChatMessage(list, finalMessages);
       setCharacterState(newEmotion);
     } catch (error) {
       console.error("Error en handleSend:", error);
@@ -149,7 +149,9 @@ export default function ChatBot({ navigation, route }) {
         emotion: CharacterState.SAD,
       };
 
-      setMessages((prev) => [...prev, errorMessage]);
+      const finalMessages = [...updatedMessages, errorMessage];
+      setMessages(finalMessages);
+      saveChatMessage(list, finalMessages);
       setCharacterState(CharacterState.SAD);
     } finally {
       setIsLoading(false);
@@ -157,68 +159,76 @@ export default function ChatBot({ navigation, route }) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <Ionicons
-            name="chevron-back"
-            size={22}
-            color="#fff"
-            onPress={() => navigation.goBack()}
-          />
-          <Image
-            source={require("../../assets/Emote/happy.png")}
-            style={styles.avatar}
-          />
-          <Text style={styles.headerTitle}>Blu</Text>
-        </View>
-      </View>
-
-      <ScrollView
-        ref={scrollRef}
-        contentContainerStyle={styles.contentContainer}
-        showsVerticalScrollIndicator={false}
-        onContentSizeChange={() =>
-          scrollRef.current?.scrollToEnd({ animated: true })
-        }
-      >
-        {messages.map((msg) => (
-          <ChatBubble key={msg.id} message={msg} />
-        ))}
-
-        {isLoading && (
-          <View style={styles.loadingIndicatorContainer}>
-            <ActivityIndicator color="#7B61FF" size="small" />
-            <Text style={styles.loadingText}>
-              Blu está pensando...
-            </Text>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <SafeAreaView style={styles.container}>
+          <View style={styles.header}>
+            <View style={styles.headerLeft}>
+              <Ionicons
+                name="chevron-back"
+                size={22}
+                color="#fff"
+                onPress={() => navigation.goBack()}
+              />
+              <Image
+                source={require("../../assets/Emote/happy.png")}
+                style={styles.avatar}
+              />
+              <Text style={styles.headerTitle}>Blu</Text>
+            </View>
           </View>
-        )}
-      </ScrollView>
 
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Escribe tu mensaje..."
-          placeholderTextColor="#888"
-          value={inputText}
-          onChangeText={setInputText}
-          onSubmitEditing={handleSend}
-          editable={!isLoading}
-        />
-        <TouchableOpacity
-          style={styles.sendButton}
-          onPress={handleSend}
-          disabled={isLoading || !inputText.trim()}
-        >
-          <Ionicons
-            name="paper-plane"
-            size={22}
-            color="#fff"
-          />
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+          <ScrollView
+            ref={scrollRef}
+            contentContainerStyle={styles.contentContainer} // Removed flexGrow to avoid layout issues
+            showsVerticalScrollIndicator={true}
+            keyboardShouldPersistTaps="handled" // Allow taps to propagate correctly
+            onContentSizeChange={() =>
+              scrollRef.current?.scrollToEnd({ animated: true })
+            }
+          >
+            {messages.map((msg) => (
+              <ChatBubble key={msg.id} message={msg} />
+            ))}
+
+            {isLoading && (
+              <View style={styles.loadingIndicatorContainer}>
+                <ActivityIndicator color="#7B61FF" size="small" />
+                <Text style={styles.loadingText}>
+                  Blu está pensando...
+                </Text>
+              </View>
+            )}
+          </ScrollView>
+
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Escribe tu mensaje..."
+              placeholderTextColor="#888"
+              value={inputText}
+              onChangeText={setInputText}
+              onSubmitEditing={handleSend}
+              editable={!isLoading}
+            />
+            <TouchableOpacity
+              style={styles.sendButton}
+              onPress={handleSend}
+              disabled={isLoading || !inputText.trim()}
+            >
+              <Ionicons
+                name="paper-plane"
+                size={22}
+                color="#fff"
+              />
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 

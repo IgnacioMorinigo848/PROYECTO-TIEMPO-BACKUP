@@ -10,7 +10,7 @@ const getCurrentUser = () => {
 };
 // o si estás en un entorno RN puro, puedes cargarla desde un archivo .env.
 // Dejamos la variable de entorno vacía ya que este entorno la proporciona.
-const API_KEY = "AIzaSyAyooiton9gstrwcqYQYc4Y1usDTwPExZ4"; 
+const API_KEY = "AIzaSyAsimm1tokkesF5JT8Fiwu1nbicOav7HzU"; 
 const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent'
 // Instrucción del Sistema para Blu (mantenemos la definición de la personalidad y formato de respuesta)
 const db = require('./db');
@@ -47,8 +47,8 @@ ${JSON.stringify(userAlerts)}
 Progreso e información:
 ${JSON.stringify(userInfoProgress)}
 
-Keep your responses concise and natural.
-
+Keep your responses concise and natural. And dont add IDs or extra metadata. And not add ** for bold text and all that. Just respond naturally as Blu.
+Make enphasis on the mood and emotion state of the user based on the data you have. The rewards and points are a secondary aspect, focus more on the emotional support and companionship.
 Your response MUST be in two parts, separated by a line containing only '---'. 
 1. The first part is your conversational reply in Spanish.
 2. The second part is a JSON object with a single key 'emotion', indicating the most appropriate emotion for you to display based on the user's last message and the context of the conversation.

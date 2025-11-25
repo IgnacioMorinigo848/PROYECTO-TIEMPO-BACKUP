@@ -3,8 +3,8 @@
 const users = [
   {
     id: 'u1',
-    name: 'Lucas Silva',
-    email: 'lsilva@empresa.com',
+    name: 'Joaquin Zanardi',
+    email: 'joaquin.zanardi@example.com',
     avatar: 'profile-image.png',
     credential: '1023423',
     team: 'Programador',
@@ -962,6 +962,142 @@ const calculatePoints = (duration, categoryId) => {
   const multiplier = multipliers[categoryId] || 1.0;
   return Math.max(1, Math.floor(basePoints * multiplier));
 };
+
+// Clear existing time and mood records
+timeRecords.length = 0;
+moodRecords.length = 0;
+
+const generateMonthlyRecords = () => {
+  const today = new Date();
+  const records = { timeRecords: [], moodRecords: [] };
+
+  for (let i = 0; i < 30; i++) {
+    const date = new Date(today);
+    date.setDate(today.getDate() - i);
+    const formattedDate = date.toISOString().split('T')[0];
+
+    // Generate a random number of time records (1-3 per day)
+    const timeRecordCount = Math.floor(Math.random() * 3) + 1;
+    for (let j = 0; j < timeRecordCount; j++) {
+      const randomCategory = `c${Math.floor(Math.random() * 4) + 1}`;
+      const randomDuration = Math.floor(Math.random() * 3600) + 600; // 10-70 minutes
+      const randomPoints = Math.floor(randomDuration / 60) * 10;
+      const randomTime = `${Math.floor(Math.random() * 24).toString().padStart(2, '0')}:${Math.floor(Math.random() * 60).toString().padStart(2, '0')}:00`;
+
+      records.timeRecords.push({
+        id: `tr_${formattedDate}_${j + 1}`,
+        userId: 'u1',
+        categoryId: randomCategory,
+        duration: randomDuration,
+        points: randomPoints,
+        date: formattedDate,
+        time: randomTime,
+        notes: `Random activity ${j + 1}`,
+        createdAt: `${formattedDate}T${randomTime}Z`,
+      });
+    }
+
+    // Generate a random number of mood records (2-4 per day)
+    const moodRecordCount = Math.floor(Math.random() * 3) + 2;
+    for (let k = 0; k < moodRecordCount; k++) {
+      const randomMood = `m${Math.floor(Math.random() * 5) + 1}`;
+      const randomTime = `${Math.floor(Math.random() * 24).toString().padStart(2, '0')}:${Math.floor(Math.random() * 60).toString().padStart(2, '0')}:00`;
+
+      records.moodRecords.push({
+        id: `mr_${formattedDate}_${k + 1}`,
+        userId: 'u1',
+        moodId: randomMood,
+        date: formattedDate,
+        time: randomTime,
+        note: `Random mood ${k + 1}`,
+        createdAt: `${formattedDate}T${randomTime}Z`,
+      });
+    }
+
+    // Ensure 2 mood records of the same type for today
+    if (i === 0) {
+      records.moodRecords.push(
+        {
+          id: `mr_${formattedDate}_special_1`,
+          userId: 'u1',
+          moodId: 'm4',
+          date: formattedDate,
+          time: '10:00:00',
+          note: 'Feeling happy (special)',
+          createdAt: `${formattedDate}T10:00:00Z`,
+        },
+        {
+          id: `mr_${formattedDate}_special_2`,
+          userId: 'u1',
+          moodId: 'm4',
+          date: formattedDate,
+          time: '14:00:00',
+          note: 'Still feeling happy (special)',
+          createdAt: `${formattedDate}T14:00:00Z`,
+        }
+      );
+    }
+  }
+
+  return records;
+};
+
+const monthlyRecords = generateMonthlyRecords();
+timeRecords.push(...monthlyRecords.timeRecords);
+moodRecords.push(...monthlyRecords.moodRecords);
+
+console.log('Mood Records:', moodRecords);
+
+const today = new Date();
+const formattedToday = today.toISOString().split('T')[0];
+
+// Add mood records for today
+moodRecords.push(
+  {
+    id: `mr_${formattedToday}_1`,
+    userId: 'u1',
+    moodId: 'm4',
+    date: formattedToday,
+    time: '10:00:00',
+    note: 'Feeling happy',
+    createdAt: `${formattedToday}T10:00:00Z`,
+  },
+  {
+    id: `mr_${formattedToday}_2`,
+    userId: 'u1',
+    moodId: 'm4',
+    date: formattedToday,
+    time: '14:00:00',
+    note: 'Still feeling happy',
+    createdAt: `${formattedToday}T14:00:00Z`,
+  }
+);
+
+// Add time records for today
+timeRecords.push(
+  {
+    id: `tr_${formattedToday}_1`,
+    userId: 'u1',
+    categoryId: 'c1',
+    duration: 600, // 10 minutes
+    points: 50,
+    date: formattedToday,
+    time: '09:00:00',
+    notes: 'Morning break',
+    createdAt: `${formattedToday}T09:00:00Z`,
+  },
+  {
+    id: `tr_${formattedToday}_2`,
+    userId: 'u1',
+    categoryId: 'c2',
+    duration: 1200, // 20 minutes
+    points: 100,
+    date: formattedToday,
+    time: '15:00:00',
+    notes: 'Afternoon mobile time',
+    createdAt: `${formattedToday}T15:00:00Z`,
+  }
+);
 
 module.exports = {
   users,
